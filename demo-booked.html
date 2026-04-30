@@ -1,0 +1,1192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Scale Your Listings — Your Strategy Call Is Confirmed</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+    <rect width="400" height="400" fill="#FAFAF7"/>
+    <circle cx="200" cy="170" r="60" fill="none" stroke="#0B2545" stroke-width="6"/>
+    <path d="M170 170 l22 22 l44 -44" stroke="#0B2545" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="200" y="290" text-anchor="middle" font-family="ui-monospace, monospace" font-size="22" fill="#0E1216" letter-spacing="3">CONFIRMED</text>
+    <text x="200" y="325" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#0B2545">Scale Your Listings</text>
+  </svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'General Sans'; src: url('https://cdn.fontshare.com/wf/MFQT7HFGCR2L5ULQTW6YXYZXXHMPKLJ3/YWQ244D6TACUX5JBKATPOW5I5MGJ3G73/7YY3ZAAE3TRV2LANYOLXNHTPHLXVWTKH.woff2') format('woff2'); font-weight: 400; font-display: swap; font-style: normal; }
+@font-face { font-family: 'General Sans'; src: url('https://cdn.fontshare.com/wf/3RZHWSNONLLWJK3RLPEKUZOMM56GO4LJ/BPDRY7AHVI3MCDXXVXTQQ76H3UXA63S3/SB2OEB6IKZPRR6JT4GFJ2TFT6HBB6AZN.woff2') format('woff2'); font-weight: 500; font-display: swap; font-style: normal; }
+@font-face { font-family: 'General Sans'; src: url('https://cdn.fontshare.com/wf/K46YRH762FH3QJ25IQM3VAXAKCHEXXW4/ISLWQPUZHZF33LRIOTBMFOJL57GBGQ4B/3ZLMEXZEQPLTEPMHTQDAUXP5ZZXCZAEN.woff2') format('woff2'); font-weight: 600; font-display: swap; font-style: normal; }
+@font-face { font-family: 'General Sans'; src: url('https://cdn.fontshare.com/wf/KWXO5X3YW4X7OLUMPO4X24HQJGJU7E2Q/VOWUQZS3YLP66ZHPTXAFSH6YACY4WJHT/NIQ54PVBBIWVK3PFSOIOUJSXIJ5WTNDP.woff2') format('woff2'); font-weight: 700; font-display: swap; font-style: normal; }
+</style>
+<style>
+  :root {
+    /* Compass-inspired editorial palette — paper white, near-black ink, navy accent */
+    --ink: #0E1216;
+    --ink-2: #1A1F26;
+    --paper-1: #FAFAF7;
+    --paper-2: #F4F3EE;
+    --paper-3: #ECEAE3;
+    --amber: #B8893E;
+    --amber-2: #A8772E;
+    --amber-3: #8E6326;
+    --amber-wash: rgba(184,137,62,0.07);
+    --slate-wash: rgba(11,37,69,0.04);
+    --line: rgba(14,18,22,0.12);
+    --muted: rgba(14,18,22,0.58);
+    --alert-red: #B4432B;
+    --alert-red-wash: rgba(180,67,43,0.08);
+    --alert-red-border: rgba(180,67,43,0.30);
+    --trustpilot: #00B67A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: var(--paper-1);
+    font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+
+  /* ---------- Alert bar (matches Compass landing) ---------- */
+  .alert {
+    background: var(--ink);
+    color: var(--paper-1);
+    text-align: center;
+    padding: 18px 24px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-bottom: 1px solid var(--ink);
+  }
+  .alert .accent { color: #E0A94B; font-weight: 600; letter-spacing: 0.18em; }
+
+  /* Amber underline at the bottom of the alert bar */
+  .alert { border-bottom: 1px solid var(--amber); white-space: nowrap; overflow-x: auto; }
+  @media (max-width: 720px) {
+    .alert { white-space: normal; font-size: 11px; letter-spacing: 0.14em; padding: 14px 18px; }
+  }
+
+  /* ---------- WAIT pill ---------- */
+  .db-wait-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    padding: 18px 44px;
+    background: linear-gradient(180deg, var(--amber) 0%, var(--amber-2) 100%);
+    color: #fff;
+    font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.25) inset,
+      0 -1px 0 rgba(0,0,0,0.12) inset,
+      0 14px 28px -14px rgba(142, 99, 38, 0.45),
+      0 4px 10px -4px rgba(11, 37, 69, 0.18);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  }
+  @media (max-width: 720px) {
+    .db-wait-pill { font-size: 11px; padding: 14px 24px; letter-spacing: 0.14em; margin-bottom: 22px; }
+  }
+
+  /* ---------- Page ---------- */
+  .page {
+    position: relative;
+    background: var(--paper-1);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 56px 32px 0;
+  }
+
+  /* ---------- Eyebrow ---------- */
+  .eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 28px;
+  }
+  .eyebrow::before {
+    content: "§";
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    color: var(--amber); font-size: 15px; letter-spacing: 0;
+  }
+
+  /* ---------- Headline ---------- */
+  h1.head {
+    font-family: 'General Sans', 'Geist', -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: clamp(30px, 3.6vw, 50px);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin: 0 auto 28px;
+    text-wrap: balance;
+    max-width: 860px;
+    color: var(--ink);
+    text-align: center;
+  }
+  h1.head u { text-decoration: none; color: var(--amber); font-style: italic; font-family: 'General Sans', sans-serif; font-weight: 500; letter-spacing: -0.025em; }
+  h1.head em {
+    font-style: italic;
+    font-family: 'General Sans', sans-serif;
+    font-weight: 500;
+    color: var(--amber);
+    letter-spacing: -0.025em;
+    font-size: 1em;
+  }
+
+  /* ---------- Trust ---------- */
+  .trust {
+    display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: nowrap;
+    margin: 0 auto;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .trust-item { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .trust-tp-only {
+    justify-content: center;
+    padding: 4px 0 0;
+    border-top: none; border-bottom: none;
+    margin-top: 0;
+  }
+  .trust-tp-only .trust-item { gap: 10px; }
+  .trust-label { font-size: 13px; line-height: 1.4; color: var(--muted); max-width: 180px; }
+  .trust-label b { color: var(--ink); font-weight: 500; display: block; font-size: 14px; }
+  .trustpilot-row { display: flex; align-items: center; gap: 10px; }
+  .tp-stars { display: flex; gap: 2px; }
+  .tp-star { width: 22px; height: 22px; background: var(--trustpilot); display: flex; align-items: center; justify-content: center; }
+  .tp-star svg { width: 14px; height: 14px; fill: #fff; }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 18px 28px;
+    background: var(--ink);
+    color: var(--paper-1);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-decoration: none;
+  }
+  .cta.cta-lg { padding: 22px 36px; font-size: 13px; }
+  .cta:hover { background: var(--amber); transform: translateY(-1px); }
+  .cta .arrow { transition: transform 0.18s; }
+  .cta:hover .arrow { transform: translateX(4px); }
+  .trust-cta-row {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    flex-wrap: wrap;
+    padding: 32px 0 24px;
+  }
+
+  /* ---------- Hero ---------- */
+  .db-hero-wrap {
+    padding-top: 48px;
+    padding-bottom: 8px;
+    text-align: center;
+  }
+  .db-confirmed-eyebrow {
+    color: var(--amber);
+    font-weight: 500;
+  }
+  .db-confirmed-eyebrow svg { stroke: var(--amber); }
+  .db-head {
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .db-sub {
+    max-width: 600px;
+    margin: 28px auto 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+    text-wrap: pretty;
+    text-align: center;
+  }
+
+  /* ---------- Step scaffolding ---------- */
+  .db-step {
+    padding-top: 72px;
+    padding-bottom: 0;
+    max-width: 920px;
+    text-align: center;
+  }
+  .db-step-label {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 18px;
+  }
+  .db-step-num { font-weight: 600; }
+  .db-step-sep {
+    display: inline-block;
+    width: 28px; height: 1px;
+    background: var(--amber);
+    opacity: 0.5;
+  }
+  .db-step-name { color: var(--ink); letter-spacing: 0.14em; }
+  .db-step-head {
+    font-family: 'General Sans', 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: clamp(26px, 3.2vw, 38px);
+    line-height: 1.14;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+    margin: 0 auto 14px;
+    max-width: 760px;
+    text-wrap: balance;
+  }
+  .db-step-head em {
+    font-style: italic;
+    font-family: 'General Sans', sans-serif;
+    font-weight: 500;
+    color: var(--amber);
+    letter-spacing: -0.022em;
+    font-size: 1em;
+  }
+  .db-step-head em.db-red { color: var(--alert-red); }
+  .db-step-sub {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 0 auto 32px;
+    max-width: 560px;
+  }
+
+  /* ---------- Video placeholder ---------- */
+  .db-video {
+    max-width: 820px;
+    margin: 8px auto 0;
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(11,37,69,0.18), transparent 70%),
+      var(--ink);
+    border-radius: 18px;
+    border: 1px solid rgba(14,18,22,0.18);
+    box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 24px 48px -28px rgba(14,18,22,0.32);
+    position: relative;
+    overflow: hidden;
+  }
+  .db-video-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px;
+    color: var(--paper-1);
+  }
+  .db-video-play {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--paper-1);
+    color: var(--ink);
+    display: grid; place-items: center;
+    box-shadow: 0 8px 24px -6px rgba(11,37,69,0.45);
+  }
+  .db-video-play svg { margin-left: 3px; }
+  .db-video-note {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    margin-top: 4px;
+  }
+  .db-video-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper-1);
+    padding: 4px 10px;
+    border: 1px solid rgba(250,250,247,0.35);
+    border-radius: 4px;
+    background: rgba(250,250,247,0.06);
+  }
+  .db-video-cap {
+    font-size: 12.5px;
+    color: rgba(250,250,247,0.62);
+    letter-spacing: -0.005em;
+  }
+
+  /* ---------- Important callout ---------- */
+  .db-callout {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 14px;
+    max-width: 680px;
+    margin: 0 auto 32px;
+    padding: 18px 22px;
+    text-align: left;
+    background: var(--alert-red-wash);
+    border: 1px solid var(--alert-red-border);
+    border-radius: 12px;
+  }
+  .db-callout-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(180,67,43,0.12);
+    color: var(--alert-red);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .db-callout-head {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--alert-red);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .db-callout-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .db-callout-text b { font-weight: 600; }
+
+  /* ---------- Gmail-style mock ---------- */
+  .db-gmail-mock {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 24px 48px -28px rgba(14,18,22,0.24);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .db-gmail-chrome {
+    padding: 10px 16px 0;
+    border-bottom: 1px solid rgba(14,18,22,0.08);
+  }
+  .db-gmail-tabs {
+    display: flex; gap: 0;
+    font-family: 'Geist', sans-serif;
+    font-size: 12.5px;
+    color: rgba(14,18,22,0.55);
+  }
+  .db-gmail-tab {
+    padding: 10px 18px;
+    display: inline-flex; align-items: center; gap: 8px;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+  }
+  .db-gmail-tab.active {
+    color: #1a73e8;
+    border-bottom-color: #1a73e8;
+  }
+  .db-gmail-tab svg { color: #1a73e8; }
+
+  .db-gmail-row {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 14px;
+    padding: 14px 20px 12px;
+    align-items: center;
+    border-bottom: 1px solid rgba(14,18,22,0.06);
+  }
+  .db-gmail-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: var(--paper-1);
+    display: grid; place-items: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-style: italic;
+  }
+  .db-gmail-from { min-width: 0; }
+  .db-gmail-sender {
+    font-size: 14px; font-weight: 600;
+    color: rgba(14,18,22,0.92);
+    margin-bottom: 2px;
+  }
+  .db-gmail-snippet {
+    font-size: 13px;
+    color: rgba(14,18,22,0.58);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .db-gmail-subject {
+    color: rgba(14,18,22,0.92);
+    font-weight: 500;
+  }
+  .db-gmail-dot { margin: 0 6px; opacity: 0.5; }
+  .db-gmail-time {
+    font-size: 12px;
+    color: rgba(14,18,22,0.52);
+    white-space: nowrap;
+  }
+
+  .db-gmail-invite {
+    padding: 20px 22px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 16px;
+    background: linear-gradient(to bottom, #fff, #FAFAFA);
+  }
+  .db-gmail-datebox {
+    width: 64px; height: 64px;
+    border: 1px solid rgba(14,18,22,0.14);
+    border-radius: 10px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+  }
+  .db-gmail-month {
+    background: var(--amber);
+    color: #fff;
+    text-align: center;
+    padding: 4px 0 3px;
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .db-gmail-day {
+    flex: 1;
+    display: grid; place-items: center;
+    font-family: 'Geist', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: rgba(14,18,22,0.92);
+  }
+  .db-gmail-details { min-width: 0; }
+  .db-gmail-etitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(14,18,22,0.94);
+    margin-bottom: 4px;
+  }
+  .db-gmail-emeta {
+    font-size: 13px;
+    color: rgba(14,18,22,0.66);
+  }
+  .db-gmail-emeta-sub { margin-bottom: 14px; }
+
+  .db-gmail-actions {
+    display: flex; align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .db-gmail-going-label {
+    font-size: 12px;
+    color: rgba(14,18,22,0.55);
+    margin-right: 4px;
+    font-weight: 500;
+  }
+  .db-gmail-btn {
+    border: 1px solid rgba(14,18,22,0.16);
+    background: #fff;
+    color: rgba(14,18,22,0.78);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .db-gmail-btn:hover {
+    border-color: rgba(14,18,22,0.32);
+    color: rgba(14,18,22,0.92);
+  }
+  .db-gmail-btn-yes {
+    border-color: var(--amber);
+    color: #fff;
+    background: var(--amber);
+    box-shadow: 0 0 0 0 rgba(11,37,69,0.45);
+    animation: dbPulse 1.8s ease-in-out infinite;
+  }
+  .db-gmail-btn-yes:hover {
+    border-color: var(--amber-3);
+    background: var(--amber-3);
+    color: #fff;
+  }
+  @keyframes dbPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(11,37,69,0.45); }
+    50%      { box-shadow: 0 0 0 8px rgba(11,37,69,0); }
+  }
+
+  .db-gmail-caption {
+    padding: 10px 20px 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(14,18,22,0.42);
+    text-align: center;
+    border-top: 1px solid rgba(14,18,22,0.06);
+    background: #FAFAFA;
+  }
+
+  /* ---------- FAQ grid ---------- */
+  .db-faq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1180px;
+    margin: 8px auto 0;
+    text-align: left;
+  }
+  .db-faq-card {
+    margin: 0;
+    background: var(--paper-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 12px 28px -20px rgba(14,18,22,0.18);
+    cursor: pointer;
+  }
+  .db-faq-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(14,18,22,0.22);
+    box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 20px 40px -24px rgba(14,18,22,0.24);
+  }
+  .db-faq-video {
+    aspect-ratio: 16 / 10;
+    background:
+      radial-gradient(120% 80% at 50% 30%, rgba(11,37,69,0.22), transparent 70%),
+      var(--ink);
+    position: relative;
+    display: grid; place-items: center;
+  }
+  .db-faq-play {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--paper-1);
+    color: var(--ink);
+    display: grid; place-items: center;
+    box-shadow: 0 8px 24px -6px rgba(11,37,69,0.45);
+  }
+  .db-faq-play svg { margin-left: 2px; }
+  .db-faq-index {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--paper-1);
+    padding: 4px 8px;
+    border: 1px solid rgba(250,250,247,0.4);
+    border-radius: 4px;
+    background: rgba(14,18,22,0.5);
+    backdrop-filter: blur(4px);
+  }
+  .db-faq-cap {
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .db-faq-q {
+    font-family: 'General Sans', 'Geist', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+  .db-faq-dur {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- Trustpilot strip ---------- */
+  .db-tp-strip { padding-top: 20px; padding-bottom: 48px; }
+
+  /* ---------- Success section ---------- */
+  .success-section {
+    padding: 72px 32px 96px;
+    background:
+      radial-gradient(80% 50% at 50% 0%, var(--amber-wash), transparent 70%),
+      var(--paper-2);
+    border-top: 1px solid var(--line);
+  }
+  .success-inner { max-width: 1180px; margin: 0 auto; text-align: center; }
+  .success-head {
+    font-family: 'General Sans', 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08; letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 12px auto 14px;
+    max-width: 820px;
+    text-wrap: balance;
+  }
+  .success-head em { font-style: italic; font-family: 'General Sans', sans-serif; font-weight: 500; color: var(--amber); font-size: 1em; letter-spacing: -0.025em; }
+  .success-sub {
+    font-family: 'General Sans', sans-serif;
+    font-size: 16px; line-height: 1.55;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 0 auto 40px;
+    letter-spacing: -0.005em;
+  }
+  .success-grid { display: flex; gap: 24px; text-align: left; align-items: flex-start; }
+  .success-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .success-card {
+    display: block;
+    width: 100%;
+    margin: 0;
+    background: var(--paper-1);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 12px 28px -20px rgba(14,18,22,0.18);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .success-card:hover { transform: translateY(-2px); border-color: rgba(14,18,22,0.22); box-shadow: 0 1px 0 rgba(14,18,22,0.04), 0 20px 40px -24px rgba(14,18,22,0.24); }
+  .success-card img { display: block; width: 100%; height: auto; background: #f3efe4; }
+  .success-card figcaption {
+    padding: 14px 16px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+    border-top: 1px solid var(--line);
+  }
+  .success-tag {
+    display: inline-flex;
+    align-self: flex-start;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    padding: 4px 8px;
+    border: 1px solid rgba(11,37,69,0.32);
+    border-radius: 4px;
+    background: rgba(11,37,69,0.04);
+  }
+  .success-cap {
+    font-family: 'General Sans', sans-serif;
+    font-size: 13px; line-height: 1.45;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  @media (max-width: 960px) { .success-grid { gap: 16px; } .success-col { gap: 16px; } .success-section { padding: 64px 24px 72px; } }
+  @media (max-width: 600px) { .success-grid { flex-direction: column; gap: 16px; } .success-section { padding: 56px 20px 64px; } }
+
+  /* ---------- Footer ---------- */
+  .site-foot {
+    background: var(--ink);
+    color: rgba(250, 250, 247, 0.82);
+    padding: 64px 32px 28px;
+    font-size: 13px;
+    line-height: 1.65;
+    position: relative;
+  }
+  .site-foot::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber-3), transparent);
+    opacity: 0.6;
+  }
+  .foot-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px;
+  }
+  .foot-logo {
+    width: 128px; height: 128px;
+    border-radius: 18px;
+    overflow: hidden;
+    display: block;
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(250,250,247,0.06);
+    text-decoration: none;
+  }
+  .foot-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .foot-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(250,250,247,0.72);
+    margin-top: -4px;
+  }
+  .foot-copy { color: rgba(250, 250, 247, 0.9); font-size: 14px; }
+  .foot-links {
+    display: flex; align-items: center; gap: 18px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .foot-links a {
+    color: var(--paper-1);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(250,250,247,0.25);
+    padding-bottom: 2px;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+  .foot-links a:hover { color: rgba(250,250,247,0.7); border-bottom-color: rgba(250,250,247,0.7); }
+  .foot-links .sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(250,250,247,0.3); }
+  .foot-rule { width: 100%; max-width: 880px; height: 1px; background: rgba(250,250,247,0.12); margin: 8px 0; }
+  .foot-disclaimer { max-width: 980px; font-size: 12px; line-height: 1.7; color: rgba(250, 250, 247, 0.55); }
+  .foot-disclaimer strong {
+    color: rgba(250, 250, 247, 0.78);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-family: 'Geist Mono', monospace;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ---------- Tweaks ---------- */
+  #tweaks {
+    position: fixed; right: 24px; bottom: 24px;
+    width: 280px;
+    background: var(--ink);
+    color: var(--paper-1);
+    border: 1px solid rgba(250,250,247,0.14);
+    border-radius: 16px;
+    padding: 18px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    box-shadow: 0 18px 48px rgba(0,0,0,0.32);
+    z-index: 99;
+    display: none;
+  }
+  #tweaks.on { display: block; }
+  #tweaks h4 { margin: 0 0 12px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-3); }
+  #tweaks label { display: block; margin-bottom: 12px; }
+  #tweaks .lbl { font-size: 11px; color: rgba(250,250,247,0.7); margin-bottom: 4px; font-family: 'Geist Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
+  #tweaks select, #tweaks input[type=range] {
+    width: 100%; background: rgba(250,250,247,0.05);
+    color: var(--paper-1); border: 1px solid rgba(250,250,247,0.14);
+    padding: 8px; border-radius: 8px; font-family: inherit; font-size: 13px;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    .wrap { padding: 32px 20px 0; }
+    .db-hero-wrap { padding-top: 32px; }
+    .db-sub { font-size: 15px; margin-top: 20px; }
+    .db-step { padding-top: 52px; }
+    .db-step-label { font-size: 10px; letter-spacing: 0.14em; }
+    .db-step-sep { width: 18px; }
+    .db-step-sub { font-size: 14px; margin-bottom: 24px; }
+    .db-video { border-radius: 14px; }
+    .db-video-play { width: 58px; height: 58px; }
+    .db-video-play svg { width: 24px; height: 24px; }
+    .db-faq-grid { grid-template-columns: 1fr; gap: 16px; }
+    .cta-addcal-row { padding-top: 48px !important; padding-bottom: 20px !important; }
+    #step-3 { padding-top: 20px; }
+    .db-gmail-chrome { padding: 8px 12px 0; }
+    .db-gmail-tab { padding: 8px 12px; font-size: 11.5px; }
+    .db-gmail-row { grid-template-columns: 36px 1fr; padding: 12px 14px; }
+    .db-gmail-time { display: none; }
+    .db-gmail-snippet {
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .db-gmail-invite { padding: 16px 14px; grid-template-columns: 52px 1fr; gap: 12px; }
+    .db-gmail-datebox { width: 52px; height: 52px; }
+    .db-gmail-day { font-size: 18px; }
+    .db-gmail-etitle { font-size: 14px; }
+    .db-gmail-actions { gap: 6px; }
+    .db-gmail-btn { padding: 6px 12px; font-size: 12.5px; }
+    .trust-cta-row { flex-direction: column; align-items: center; gap: 14px; }
+  }
+  @media (max-width: 640px) {
+    .site-foot { padding: 56px 24px 32px; }
+    .foot-logo { width: 104px; height: 104px; }
+    .foot-copy { font-size: 13px; }
+    .foot-disclaimer { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="alert">
+  <span class="accent">Action required</span> &mdash;
+  Your call will be cancelled unless you <span class="accent">confirm</span>
+</div>
+
+<main class="page">
+
+  <!-- HERO -->
+  <div class="wrap db-hero-wrap">
+
+    <div class="db-wait-pill" role="status">
+      <span>Wait: Your call is not yet confirmed&hellip;</span>
+    </div>
+
+    <h1 class="head db-head" style="font-size: 34px;">
+      Watch This Quick Video To See How We Bring You
+      <span aria-hidden="true" style="display:block;width:96px;height:1px;margin:22px auto;background:var(--amber);opacity:0.7;"></span>
+      <u>30+ Listing Appointments In The Next 90 Days.</u>
+    </h1>
+
+    <p class="db-sub">
+      Follow the three quick steps below — it takes less than 5 minutes.
+    </p>
+
+  </div>
+
+  <!-- STEP 1: Watch -->
+  <section class="wrap db-step" id="step-1" aria-label="Step 1: Watch the short video">
+    <div class="db-step-label">
+      <span class="db-step-num">Step 01</span>
+      <span class="db-step-sep" aria-hidden="true"></span>
+      <span class="db-step-name">Watch the short video</span>
+    </div>
+    <h2 class="db-step-head">
+      Please Watch The Short Video Below to Understand Exactly How Our <em>System And Pricing</em> Works <em>Before</em> Your Call&hellip;
+    </h2>
+    <p class="db-step-sub">3 minutes. No pitch. Just what we'll walk you through on the call.</p>
+
+    <div class="db-video" role="img" aria-label="Video placeholder — drop your embed here">
+      <div class="db-video-inner">
+        <div class="db-video-play">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" aria-hidden="true">
+            <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="db-video-note">
+          <span class="db-video-tag">Video placeholder</span>
+          <span class="db-video-cap">Replace this block with your Wistia / Vimeo / YouTube embed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: Confirm calendar -->
+  <section class="wrap db-step" id="step-2" aria-label="Step 2: Confirm your calendar invite">
+    <div class="db-step-label">
+      <span class="db-step-num">Step 02</span>
+      <span class="db-step-sep" aria-hidden="true"></span>
+      <span class="db-step-name">Add it to your calendar</span>
+    </div>
+    <h2 class="db-step-head">
+      Click <em>Yes</em> on the invite or it will be <em class="db-red">automatically cancelled</em>
+    </h2>
+
+    <div class="db-callout">
+      <div class="db-callout-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M4.93 19h14.14a2 2 0 001.73-3L13.73 4a2 2 0 00-3.46 0L3.2 16a2 2 0 001.73 3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="db-callout-body">
+        <div class="db-callout-head">Important</div>
+        <div class="db-callout-text">
+          Check your inbox for <b>"Scale Your Listings"</b> (or check spam for a <b>@getcybersphere.com</b> sender). Open the invite, click <b>"Add to Calendar"</b> and then <b>"Yes"</b> for the invitation.
+        </div>
+      </div>
+    </div>
+
+    <!-- Gmail-style mock -->
+    <figure class="db-gmail-mock" aria-label="Example Gmail invite showing the two mandatory buttons to press">
+      <img src="assets/gmail-invite.png?v=1" alt="Example Gmail invite — press 'Add to calendar' then click 'Yes' on the invitation" style="display:block; width:100%; height:auto;" />
+      <figcaption class="db-gmail-caption">Example Gmail invite · actual wording may vary</figcaption>
+    </figure>
+
+    <div class="trust-cta-row cta-addcal-row" style="padding-top:36px;padding-bottom:4px;flex-direction:column;gap:14px;">
+      <a href="https://msgsndr.com/google/calendar/add-event/" target="_blank" rel="noopener" class="cta cta-lg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:2px;">
+          <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Add to calendar
+      </a>
+    </div>
+  </section>
+
+  <!-- STEP 3: FAQ videos -->
+  <section class="wrap db-step" id="step-3" aria-label="Step 3: Watch bite-sized videos">
+    <div class="db-step-label">
+      <span class="db-step-num">Step 03</span>
+      <span class="db-step-sep" aria-hidden="true"></span>
+      <span class="db-step-name">Get your questions answered</span>
+    </div>
+    <h2 class="db-step-head">
+      The <em>three questions</em> every agent asks before we start
+    </h2>
+    <p class="db-step-sub">Each one is under 3 minutes. Watch whichever matters most to you.</p>
+
+    <div class="db-faq-grid">
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">01</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"What is your refund policy?"</div>
+          <div class="db-faq-dur">How our guarantee works</div>
+        </figcaption>
+      </figure>
+
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">02</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"How do you make sure the appointments are qualified?"</div>
+          <div class="db-faq-dur">Our qualification process</div>
+        </figcaption>
+      </figure>
+
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">03</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"How do you stay compliant with TCPA &amp; the DNC?"</div>
+          <div class="db-faq-dur">Outreach policy &amp; compliance</div>
+        </figcaption>
+      </figure>
+
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">04</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"How fast will I see signed listings?"</div>
+          <div class="db-faq-dur">Realistic timelines</div>
+        </figcaption>
+      </figure>
+
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">05</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"How do I know this is going to work in my market?"</div>
+          <div class="db-faq-dur">Proof &amp; case studies</div>
+        </figcaption>
+      </figure>
+
+      <figure class="db-faq-card">
+        <div class="db-faq-video">
+          <div class="db-faq-play">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="db-faq-index">06</div>
+        </div>
+        <figcaption class="db-faq-cap">
+          <div class="db-faq-q">"ISA service vs &ldquo;growth partner&rdquo;?"</div>
+          <div class="db-faq-dur">Why it matters for you</div>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Trustpilot strip -->
+  <section class="wrap db-tp-strip" aria-label="Trustpilot">
+    <div class="trust trust-tp-only" style="justify-content:center;">
+      <div class="trust-item">
+        <div class="trustpilot-row">
+          <div style="font-size:13px;font-weight:500;">Excellent</div>
+          <div class="tp-stars">
+            <div class="tp-star"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="tp-star"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="tp-star"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="tp-star"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="tp-star"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          </div>
+        </div>
+        <div class="trust-label" style="margin-left:8px;"><b>100+ reviews</b>Verified on Trustpilot</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Success Stories -->
+  <section class="success-section" id="success-stories" aria-label="Client success stories">
+    <div class="success-inner">
+      <div class="eyebrow" style="justify-content:center;">Proof from the inbox</div>
+      <h2 class="success-head">Client <em>Success Stories</em></h2>
+      <p class="success-sub">Unedited screenshots of commissions, closings, and real conversations with the agents we work with.</p>
+
+      <div class="success-grid">
+        <div class="success-col">
+          <figure class="success-card">
+            <img src="assets/testimonials/01-referral-17x-roas.png" alt="Referral email from a 22-year listing firm reporting 17:1 ROAS and $1.2–$1.4M in GCI per quarter" loading="lazy">
+            <figcaption>
+              <span class="success-tag">17:1 ROAS</span>
+              <span class="success-cap">Park Avenue Luxury Group &middot; 22-year firm referring us in &middot; $1.2–$1.4M/qtr in GCI on luxury &amp; high-equity listings</span>
+            </figcaption>
+          </figure>
+
+          <figure class="success-card">
+            <img src="assets/testimonials/03-marin-48m.png?v=6" alt="iMessage from Tony M.: FSBO that came in is signing her $4.8M Marin estate Thursday" loading="lazy">
+            <figcaption>
+              <span class="success-tag">$4.8M Marin estate</span>
+              <span class="success-cap">Tony M. &middot; FSBO lead from new targeting &middot; listing agreement signed the same week the change went live</span>
+            </figcaption>
+          </figure>
+
+          <figure class="success-card">
+            <img src="assets/testimonials/05-openhouse-14m.png" alt="Cameron R. CRM dashboard: $1,425,000 GCI pipeline, 25 listings signed, 612 visitors, 328 live attendees" loading="lazy">
+            <figcaption>
+              <span class="success-tag">$1.425M pipeline</span>
+              <span class="success-cap">Calloway Realty Group &middot; one open-house campaign &middot; 25 listings signed &middot; $57K avg commission</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="success-col">
+          <figure class="success-card">
+            <img src="assets/testimonials/02-record-month.png" alt="Email from Jordan W.: Record month in past 3 years, calendar stacked with FSBO and expired appointments through April" loading="lazy">
+            <figcaption>
+              <span class="success-tag">Record month</span>
+              <span class="success-cap">Jordan W., Whitfield Listings &middot; record February in 3 years &middot; FSBO &amp; expired calendar stacked through April</span>
+            </figcaption>
+          </figure>
+
+          <figure class="success-card">
+            <img src="assets/testimonials/04-probate-18m.png?v=6" alt="iMessage from Mike R.: Signed our first probate listing yesterday — $1.8M waterfront estate" loading="lazy">
+            <figcaption>
+              <span class="success-tag">$1.8M first probate</span>
+              <span class="success-cap">Mike R. &middot; probate added to intake routing &middot; first probate listing signed the next day &middot; $1.8M waterfront</span>
+            </figcaption>
+          </figure>
+
+          <figure class="success-card">
+            <img src="assets/testimonials/06-multicampaign-scale.png" alt="Email from William H., Hartwell Realty Group: FSBO ad 3x'd listing flow, 148 appointments in 4 weeks, expired ad pulling 72/mo" loading="lazy">
+            <figcaption>
+              <span class="success-tag">3× listing flow</span>
+              <span class="success-cap">William H., Hartwell Realty Group &middot; 148 listings in 4 weeks &middot; 72/mo on expireds &middot; booked 6 weeks out</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="trust-cta-row" style="padding-top:40px;padding-bottom:8px;flex-direction:column;gap:14px;">
+        <a href="#step-1" class="cta cta-lg">Go back to the video</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-foot">
+  <div class="foot-wrap">
+    <a class="foot-logo" href="#top" aria-label="Scale Your Listings home">
+      <img src="assets/scale-your-listings-logo.png" alt="Scale Your Listings">
+    </a>
+
+    <div class="foot-tag">AI Listing Acquisition · For top-producing listing agents</div>
+
+    <nav class="foot-links" aria-label="Legal">
+      <a href="https://scaleyourlistings.getcybersphere.com/privacy-page" target="_blank" rel="noopener">Privacy Policy</a>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="https://scaleyourlistings.getcybersphere.com/terms-page" target="_blank" rel="noopener">Terms of Service</a>
+    </nav>
+
+    <div class="foot-copy">© 2026 Cybersphere LLC, DBA Scale Your Listings. All rights reserved.</div>
+
+    <div class="foot-rule"></div>
+
+    <p class="foot-disclaimer">
+      <strong>Disclaimer</strong>
+      This site is not a part of the Facebook™ website or Facebook™ Inc. Additionally, this site is NOT endorsed by Facebook™ in any way. FACEBOOK™ is a trademark of FACEBOOK™, Inc.
+    </p>
+  </div>
+</footer>
+
+<!-- Tweaks -->
+<div id="tweaks">
+  <h4>Tweaks</h4>
+  <label>
+    <div class="lbl">Accent</div>
+    <select id="tw-accent">
+      <option value="#0B2545">Navy (default)</option>
+      <option value="#1B3A66">Lighter navy</option>
+      <option value="#0E1216">Ink</option>
+    </select>
+  </label>
+  <label>
+    <div class="lbl">Paper warmth</div>
+    <input id="tw-warmth" type="range" min="0" max="100" value="50">
+  </label>
+</div>
+
+<script>
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accentHue": "#0B2545",
+    "warmth": 50
+  }/*EDITMODE-END*/;
+
+  const applyTweaks = (t) => {
+    document.documentElement.style.setProperty('--amber', t.accentHue);
+    const w = t.warmth / 100;
+    const page = document.querySelector('.page');
+    if (page) page.style.setProperty('--amber-wash', `rgba(11,37,69,${0.02 + w*0.06})`);
+  };
+  applyTweaks(TWEAK_DEFAULTS);
+
+  window.addEventListener('message', (e) => {
+    if (!e.data) return;
+    if (e.data.type === '__activate_edit_mode') document.getElementById('tweaks').classList.add('on');
+    if (e.data.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('on');
+  });
+  window.parent.postMessage({type:'__edit_mode_available'}, '*');
+
+  /* Wire the ADD TO CALENDAR button to the GHL appointment passed via ?apptId= */
+  (function wireAddToCalendar(){
+    const params = new URLSearchParams(window.location.search);
+    const apptId = params.get('apptId') || params.get('appointmentId');
+    const btns = document.querySelectorAll('a.cta[href*="msgsndr.com/google/calendar/add-event"]');
+    if (apptId) {
+      btns.forEach(b => {
+        b.href = 'https://msgsndr.com/google/calendar/add-event/' + encodeURIComponent(apptId);
+      });
+    }
+  })();
+
+  const cur = {...TWEAK_DEFAULTS};
+  document.getElementById('tw-accent').addEventListener('change', e => { cur.accentHue = e.target.value; applyTweaks(cur); window.parent.postMessage({type:'__edit_mode_set_keys', edits:{accentHue:cur.accentHue}}, '*'); });
+  document.getElementById('tw-warmth').addEventListener('input', e => { cur.warmth = +e.target.value; applyTweaks(cur); window.parent.postMessage({type:'__edit_mode_set_keys', edits:{warmth:cur.warmth}}, '*'); });
+</script>
+</body>
+</html>

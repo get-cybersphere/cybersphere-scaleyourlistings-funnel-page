@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scale Your Listings — Design System</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ==================================================
+     TOKENS
+     ================================================== */
+  :root {
+    /* Blue */
+    --blue-600: #0A62FF;
+    --blue-500: #0C62FF;
+    --blue-400: #6BA0FF;
+    --blue-300: #8DB5FF;
+    --blue-50:  #F2F7FF;
+
+    /* Navy */
+    --navy-900: #20203F;
+    --navy-800: #2A2A4A;
+    --navy-700: #353560;
+
+    /* Canary */
+    --canary-500: #F7CF46;
+    --canary-400: #F7D56F;
+    --canary-100: #FBEFC9;
+
+    /* Neutrals */
+    --white:    #FFFFFF;
+    --gray-900: #202020;
+    --gray-700: #333333;
+    --gray-500: #808C91;
+    --gray-300: #C4C4C4;
+    --gray-200: #E6E9F1;
+    --gray-100: #EDEDED;
+
+    /* Supporting */
+    --claret-600: #B23232;
+
+    /* Type */
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    --shadow-card: 0 2px 7px rgba(20, 20, 43, 0.09);
+    --shadow-elevated: 0 12px 32px rgba(20, 20, 43, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--white);
+    color: var(--navy-900);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ==================================================
+     PRIMITIVES
+     ================================================== */
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+  .prose { max-width: 720px; }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow-rule {
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--blue-600);
+  }
+  .eyebrow.on-light { color: var(--blue-600); }
+  .eyebrow.on-light .eyebrow-rule { background: var(--blue-600); }
+  .eyebrow.on-dark { color: var(--blue-400); }
+  .eyebrow.on-dark .eyebrow-rule { background: var(--blue-400); }
+
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; }
+  .display-xl { font-size: 80px; line-height: 1.05; letter-spacing: -0.025em; }
+  .display-lg { font-size: 64px; line-height: 1.1; letter-spacing: -0.02em; }
+  .display-md { font-size: 48px; line-height: 1.15; letter-spacing: -0.02em; }
+  .display-sm { font-size: 36px; line-height: 1.2; letter-spacing: -0.015em; }
+
+  .heading-lg { font-family: var(--font-display); font-size: 28px; line-height: 1.25; letter-spacing: -0.01em; font-weight: 600; }
+  .heading-md { font-family: var(--font-display); font-size: 22px; line-height: 1.3; letter-spacing: -0.005em; font-weight: 600; }
+  .heading-sm { font-family: var(--font-sans); font-size: 18px; line-height: 1.4; font-weight: 600; }
+
+  .body-lg { font-size: 18px; line-height: 1.55; }
+  .body-md { font-size: 16px; line-height: 1.55; }
+  .body-sm { font-size: 14px; line-height: 1.5; }
+
+  .mono-md { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+  .mono-sm { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .mono-xs { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .accent-blue { color: var(--blue-600); }
+  .accent-canary { color: var(--canary-500); }
+
+  /* ==================================================
+     LAYOUT — sticky nav + sections
+     ================================================== */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--navy-900);
+    text-decoration: none;
+  }
+  .nav-brand .scale { color: var(--blue-600); }
+  .nav-brand img { width: 28px; height: 28px; }
+  .nav-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    display: flex;
+    gap: 28px;
+  }
+  .nav-meta a { color: var(--gray-500); text-decoration: none; transition: color 240ms var(--ease); }
+  .nav-meta a:hover { color: var(--blue-600); }
+
+  .section { padding: 96px 0; }
+  .section.dense { padding: 64px 0; }
+  .section.white { background: var(--white); color: var(--navy-900); }
+  .section.blue-50 { background: var(--blue-50); color: var(--navy-900); }
+  .section.navy { background: var(--navy-900); color: var(--white); }
+
+  .section-head {
+    text-align: left;
+    margin-bottom: 56px;
+  }
+  .section-head .eyebrow { margin-bottom: 24px; }
+  .section-head h2 { margin-bottom: 16px; color: var(--navy-900); }
+  .section.navy .section-head h2 { color: var(--white); }
+  .section-head .lede { color: var(--gray-700); max-width: 720px; }
+  .section.navy .section-head .lede { color: rgba(255,255,255,0.78); }
+
+  /* ==================================================
+     HERO
+     ================================================== */
+  .hero {
+    background: linear-gradient(180deg, #20203F 0%, #0C62FF 140%);
+    color: var(--white);
+    padding: 128px 0 96px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(247, 207, 70, 0.05) 1px, transparent 0);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero h1 {
+    max-width: 1100px;
+    margin-bottom: 32px;
+    color: var(--white);
+  }
+  .hero h1 .scale { color: var(--canary-500); }
+  .hero-lede {
+    font-size: 20px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.85);
+    max-width: 680px;
+    margin-bottom: 64px;
+  }
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 32px;
+    max-width: 960px;
+  }
+  .hero-meta > div {
+    padding-right: 32px;
+    border-right: 1px solid rgba(255,255,255,0.18);
+  }
+  .hero-meta > div:last-child { border-right: 0; }
+  .hero-meta dt {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 12px;
+  }
+  .hero-meta dd {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--white);
+  }
+
+  /* ==================================================
+     TOC
+     ================================================== */
+  .toc {
+    background: var(--blue-50);
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 32px 0;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+  .toc-item {
+    text-decoration: none;
+    color: var(--navy-900);
+    border-left: 1px solid var(--gray-200);
+    padding: 4px 0 4px 16px;
+    transition: border-color 240ms var(--ease), color 240ms var(--ease);
+  }
+  .toc-item:hover { border-left-color: var(--blue-600); color: var(--blue-600); }
+  .toc-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--blue-600);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .toc-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.2;
+    display: block;
+    letter-spacing: -0.005em;
+  }
+
+  /* ==================================================
+     COLOR
+     ================================================== */
+  .swatch-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .swatch {
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .swatch-chip {
+    height: 144px;
+    border-bottom: 1px solid var(--gray-200);
+    position: relative;
+  }
+  .swatch-chip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+  }
+  .swatch-meta { padding: 16px 16px 18px; }
+  .swatch-token {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--navy-900);
+    margin-bottom: 6px;
+  }
+  .swatch-hex {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-bottom: 10px;
+  }
+  .swatch-use {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--gray-700);
+  }
+
+  .swatch-row.compact { grid-template-columns: repeat(7, 1fr); }
+  .swatch-row.compact .swatch-chip { height: 88px; }
+
+  .color-rules {
+    background: var(--navy-900);
+    color: var(--white);
+    padding: 48px;
+    margin-top: 32px;
+    border-radius: 10px;
+    border-left: 3px solid var(--blue-600);
+  }
+  .color-rules h3 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .color-rules ul { list-style: none; }
+  .color-rules li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--navy-700);
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.85);
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 16px;
+  }
+  .color-rules li:last-child { border-bottom: 0; }
+  .color-rules li::before {
+    content: "✓";
+    color: var(--blue-400);
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .color-rules li.no::before { content: "✗"; color: var(--claret-600); }
+
+  /* Pair samples */
+  .pair-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .pair {
+    padding: 48px 32px;
+    min-height: 220px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--gray-200);
+  }
+  .pair-1 { background: var(--white); color: var(--navy-900); }
+  .pair-2 { background: var(--blue-50); color: var(--navy-900); border-color: transparent; }
+  .pair-3 { background: linear-gradient(180deg, #20203F 0%, #0C62FF 130%); color: var(--white); border-color: transparent; }
+  .pair-headline { font-family: var(--font-display); font-weight: 600; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; }
+  .pair-headline .scale { color: var(--blue-600); }
+  .pair-3 .pair-headline .scale { color: var(--canary-500); }
+  .pair-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-top: 24px;
+  }
+  .pair-3 .pair-meta { color: rgba(255,255,255,0.65); }
+
+  /* ==================================================
+     TYPE
+     ================================================== */
+  .type-table { display: flex; flex-direction: column; }
+  .type-row {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--gray-200);
+    align-items: baseline;
+  }
+  .type-row:first-child { padding-top: 0; }
+  .type-row:last-child { border-bottom: 0; }
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+  }
+  .type-meta .token { display: block; color: var(--blue-600); margin-bottom: 4px; }
+  .type-meta .specs { display: block; color: var(--gray-500); margin-top: 8px; font-size: 10px; }
+  .type-sample-display { font-family: var(--font-display); color: var(--navy-900); font-weight: 600; }
+  .type-sample-sans { font-family: var(--font-sans); color: var(--navy-900); }
+  .type-sample-mono { font-family: var(--font-mono); color: var(--navy-900); }
+
+  .type-rules {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .type-rules-block { padding: 32px; border-radius: 10px; border-left: 3px solid var(--blue-600); background: var(--blue-50); }
+  .type-rules-block h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .type-rules-block p { font-size: 15px; line-height: 1.6; color: var(--gray-700); margin-bottom: 12px; font-family: var(--font-sans); font-weight: 400; }
+  .type-rules-block p:last-child { margin-bottom: 0; }
+
+  /* ==================================================
+     LOGO
+     ================================================== */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .logo-card {
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    position: relative;
+    border-radius: 10px;
+  }
+  .logo-card-meta {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .logo-card.light { background: var(--white); }
+  .logo-card.light .logo-card-meta { color: var(--gray-500); }
+  .logo-card.navy { background: var(--navy-900); border-color: var(--navy-800); }
+  .logo-card.navy .logo-card-meta { color: var(--blue-300); }
+  .logo-card-inner {
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+  }
+  .logo-card-inner img { max-width: 100%; max-height: 100%; }
+
+  .logo-secondary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .logo-mark-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    min-height: 280px;
+  }
+  .logo-mark-card.dark { background: var(--navy-900); border-color: var(--navy-800); }
+  .logo-mark-card .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+  }
+  .logo-mark-card.dark .label { color: var(--blue-300); }
+
+  .logo-construction {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 32px;
+  }
+  .construction-art {
+    background: var(--blue-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 64px 48px;
+    position: relative;
+  }
+  .construction-svg { width: 100%; height: auto; display: block; }
+
+  .donts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .dont {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    aspect-ratio: 1.4 / 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .dont-art {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+  }
+  .dont-art::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--claret-600);
+    border-radius: 50%;
+    background:
+      linear-gradient(45deg, transparent 45%, var(--claret-600) 45%, var(--claret-600) 55%, transparent 55%);
+  }
+  .dont-label {
+    border-top: 1px solid var(--gray-200);
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--claret-600);
+  }
+
+  /* ==================================================
+     COMPONENTS
+     ================================================== */
+  .comp-block { margin-bottom: 48px; }
+  .comp-head {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+    align-items: baseline;
+  }
+  .comp-head h3 { font-family: var(--font-display); font-weight: 600; font-size: 24px; line-height: 1.2; color: var(--navy-900); letter-spacing: -0.015em; }
+  .comp-head .desc { color: var(--gray-700); font-size: 15px; line-height: 1.55; }
+
+  .comp-stage {
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    border-radius: 10px;
+    padding: 56px 48px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .comp-stage.navy { background: var(--navy-900); border-color: var(--navy-800); }
+  .comp-stage.blue-50 { background: var(--blue-50); }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: var(--blue-600);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms var(--ease);
+  }
+  .btn-primary:hover { background: #084dcc; }
+  .btn-primary .arrow { font-size: 18px; line-height: 1; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--blue-600);
+    border: 1px solid var(--blue-600);
+    border-radius: 5px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms var(--ease);
+  }
+  .btn-secondary:hover { background: var(--blue-50); }
+
+  .btn-on-navy {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: var(--white);
+    color: var(--navy-900);
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms var(--ease);
+  }
+  .btn-on-navy:hover { background: var(--blue-50); }
+
+  .btn-ghost-navy {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 5px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .btn-ghost-navy:hover { background: rgba(255,255,255,0.08); border-color: var(--white); }
+
+  .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue-600);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--blue-600);
+    padding-bottom: 2px;
+    cursor: pointer;
+  }
+  .btn-link:hover { color: var(--blue-500); border-bottom-color: var(--blue-500); }
+
+  /* Stat callout */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    width: 100%;
+  }
+  .stat {
+    padding: 0 24px;
+    border-right: 1px solid var(--gray-200);
+  }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: 0; padding-right: 0; }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 56px;
+    font-weight: 500;
+    color: var(--navy-900);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-num.blue { color: var(--blue-600); }
+  .stat-num.canary { color: var(--canary-500); }
+  .stat-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-top: 16px;
+    max-width: 200px;
+    line-height: 1.4;
+  }
+
+  /* Quote */
+  .quote {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--navy-900);
+    border-left: 3px solid var(--blue-600);
+    padding-left: 32px;
+    max-width: 720px;
+    letter-spacing: -0.01em;
+  }
+  .quote-attr {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    padding-left: 35px;
+    margin-top: 20px;
+  }
+
+  /* Inquiry-type cards (sub-vertical) */
+  .vert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+  }
+  .vert-card {
+    background: var(--navy-800);
+    border: 1px solid var(--navy-700);
+    border-radius: 10px;
+    padding: 32px;
+    position: relative;
+    min-height: 200px;
+  }
+  .vert-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 1px;
+    background: var(--canary-500);
+  }
+  .vert-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 24px;
+    background: var(--canary-500);
+  }
+  .vert-card .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 24px;
+  }
+  .vert-card h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .vert-card p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.78);
+    font-family: var(--font-sans);
+  }
+
+  /* Process timeline */
+  .process { width: 100%; display: flex; flex-direction: column; }
+  .process-step {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 48px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .process-step:first-child { padding-top: 0; }
+  .process-step:last-child { border-bottom: 0; }
+  .process-time {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--blue-600);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  .process-content h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.25;
+    color: var(--navy-900);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .process-content p {
+    color: var(--gray-700);
+    font-size: 15px;
+    max-width: 540px;
+    font-family: var(--font-sans);
+  }
+
+  /* Testimonial card */
+  .test-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    width: 100%;
+    max-width: 480px;
+  }
+  .test-card .quote-text {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--gray-700);
+    margin-bottom: 24px;
+  }
+  .test-card .attr {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .test-card .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-600), var(--navy-900));
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .test-card .name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy-900);
+  }
+  .test-card .meta {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+
+  /* Form */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-card);
+  }
+  .form-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+    margin-bottom: 12px;
+  }
+  .form-card h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--navy-900);
+    margin-bottom: 24px;
+    letter-spacing: -0.015em;
+  }
+  .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .form-row label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+  }
+  .form-row input, .form-row select {
+    padding: 12px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--navy-900);
+    transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+  }
+  .form-row input:focus, .form-row select:focus {
+    outline: none;
+    border-color: var(--blue-600);
+    box-shadow: 0 0 0 3px rgba(10, 98, 255, 0.12);
+  }
+  .form-card .btn-primary { width: 100%; justify-content: center; margin-top: 8px; }
+  .form-fine {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  /* Badge strip */
+  .badges {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+  .badge {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--gray-500);
+    border-left: 1px solid var(--gray-200);
+    padding-left: 24px;
+    line-height: 1.1;
+  }
+  .badge:first-child { border-left: 0; padding-left: 0; }
+  .badge .small {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    display: block;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Tag (pill) */
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--blue-50);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+  }
+  .tag.outline { background: transparent; border-color: var(--gray-200); color: var(--gray-700); }
+  .tag.canary { background: var(--canary-100); color: #8a6f12; border-color: transparent; }
+  .tag.claret { background: transparent; border-color: var(--claret-600); color: var(--claret-600); }
+
+  /* Inbox proof card (mini sample) */
+  .inbox-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: var(--shadow-card);
+  }
+  .inbox-head {
+    background: var(--blue-50);
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .inbox-head .from {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy-900);
+  }
+  .inbox-head .from span { font-weight: 400; color: var(--gray-500); }
+  .inbox-head .when {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gray-500);
+    letter-spacing: 0.05em;
+  }
+  .inbox-body {
+    padding: 20px 22px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--gray-700);
+  }
+  .inbox-body .highlight {
+    background: rgba(247, 207, 70, 0.35);
+    padding: 1px 4px;
+    color: var(--navy-900);
+    font-weight: 600;
+  }
+  .inbox-body .annot {
+    display: inline-block;
+    border: 1.5px solid var(--claret-600);
+    border-radius: 16px;
+    padding: 1px 6px;
+    color: var(--claret-600);
+    font-weight: 600;
+    transform: rotate(-2deg);
+  }
+  .inbox-cap {
+    border-top: 1px solid var(--gray-200);
+    padding: 12px 18px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+  }
+
+  /* ==================================================
+     VOICE
+     ================================================== */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+  .voice-card {
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    border-radius: 10px;
+    padding: 32px;
+  }
+  .voice-card.on { border-left: 3px solid var(--blue-600); }
+  .voice-card.off { border-left: 3px solid var(--claret-600); }
+  .voice-card .tag-line {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .voice-card.on .tag-line { color: var(--blue-600); }
+  .voice-card.off .tag-line { color: var(--claret-600); }
+  .voice-card blockquote {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--navy-900);
+    letter-spacing: -0.01em;
+  }
+  .voice-card.off blockquote { color: var(--gray-500); text-decoration: line-through; text-decoration-color: rgba(178, 50, 50, 0.4); text-decoration-thickness: 1px; }
+
+  .word-bank {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .word-list h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .word-list.use h4 { color: var(--blue-600); }
+  .word-list.banned h4 { color: var(--claret-600); }
+  .word-list ul { list-style: none; columns: 2; column-gap: 24px; }
+  .word-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-200);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray-700);
+    break-inside: avoid;
+  }
+  .word-list.banned li { color: var(--gray-500); text-decoration: line-through; text-decoration-color: var(--claret-600); }
+
+  /* CTA copy library */
+  .cta-bank {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .cta-list {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 32px;
+  }
+  .cta-list.use { border-left: 3px solid var(--blue-600); }
+  .cta-list.no  { border-left: 3px solid var(--claret-600); }
+  .cta-list h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .cta-list.use h4 { color: var(--blue-600); }
+  .cta-list.no  h4 { color: var(--claret-600); }
+  .cta-list ul { list-style: none; }
+  .cta-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-200);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy-900);
+  }
+  .cta-list li:last-child { border-bottom: 0; }
+  .cta-list.no li { color: var(--gray-500); text-decoration: line-through; text-decoration-color: rgba(178,50,50,0.4); }
+
+  /* Voice principles */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--gray-200);
+    border-left: 1px solid var(--gray-200);
+  }
+  .principle {
+    padding: 32px;
+    border-bottom: 1px solid var(--gray-200);
+    border-right: 1px solid var(--gray-200);
+  }
+  .principle .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--blue-600);
+    margin-bottom: 12px;
+  }
+  .principle h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--navy-900);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .principle p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--gray-700);
+    font-family: var(--font-sans);
+  }
+
+  /* ==================================================
+     PLAYBOOK
+     ================================================== */
+  .playbook {
+    border-top: 1px solid var(--gray-200);
+  }
+  .play-row {
+    display: grid;
+    grid-template-columns: 80px 220px 1fr 200px;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--gray-200);
+    align-items: baseline;
+  }
+  .play-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--blue-600);
+    letter-spacing: 0.1em;
+  }
+  .play-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--navy-900);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .play-desc {
+    font-size: 14px;
+    color: var(--gray-700);
+    line-height: 1.55;
+    font-family: var(--font-sans);
+  }
+  .play-surface {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    text-align: right;
+  }
+  .play-surface.navy::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--navy-900);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .play-surface.white::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .play-surface.blue::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--blue-50);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ==================================================
+     ANTI-PATTERNS
+     ================================================== */
+  .anti-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .anti-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    grid-column: span 2;
+  }
+  .anti-cell {
+    padding: 32px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .anti-cell.no { background: #0a0a0a; color: #fff; }
+  .anti-cell.yes { background: var(--white); border-left: 1px solid var(--gray-200); }
+  .anti-cell .tag-line {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .anti-cell.no .tag-line { color: #ff6464; }
+  .anti-cell.yes .tag-line { color: var(--blue-600); }
+
+  .templated-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+  .templated-headline em { font-style: normal; color: #FFD700; background: #FFD700; color: #111; padding: 0 6px; }
+  .templated-eyebrow { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; color: #FFD700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .templated-cta {
+    display: inline-block;
+    background: #FFD700;
+    color: #111;
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-top: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+  .ours-headline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.1;
+    color: var(--navy-900);
+    letter-spacing: -0.02em;
+  }
+  .ours-headline .scale { color: var(--blue-600); }
+
+  /* ==================================================
+     IMAGERY RULES
+     ================================================== */
+  .img-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .img-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .img-art {
+    aspect-ratio: 3 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .img-art-1 { background: var(--blue-50); }
+  .img-art-2 { background: var(--navy-900); color: var(--white); }
+  .img-art-3 { background: var(--white); }
+  .img-meta {
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-200);
+  }
+  .img-meta .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+    margin-bottom: 6px;
+  }
+  .img-meta .desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.5;
+    font-family: var(--font-sans);
+  }
+
+  /* ==================================================
+     APPLIED
+     ================================================== */
+  .applied {
+    background: linear-gradient(180deg, #20203F 0%, #0C62FF 140%);
+    color: var(--white);
+    padding: 0;
+    border-top: 1px solid var(--navy-800);
+    position: relative;
+    overflow: hidden;
+  }
+  .applied-frame {
+    padding: 96px 0;
+    position: relative;
+  }
+  .applied-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(247, 207, 70, 0.05) 1px, transparent 0);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+  .applied-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+  .applied-h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .applied-h1 .scale { color: var(--canary-500); }
+  .applied-sub {
+    font-size: 18px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 48px;
+    max-width: 560px;
+  }
+  .applied-cta-row { display: flex; gap: 16px; align-items: center; margin-bottom: 64px; flex-wrap: wrap; }
+  .applied-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 32px;
+    max-width: 600px;
+  }
+  .applied-stat { padding-right: 24px; border-right: 1px solid rgba(255,255,255,0.18); }
+  .applied-stat:last-child { border-right: 0; padding-right: 0; }
+  .applied-stat-num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .applied-stat-num.canary { color: var(--canary-500); }
+  .applied-stat-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-top: 12px;
+    line-height: 1.4;
+    max-width: 160px;
+  }
+
+  .applied-form {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 36px;
+    color: var(--navy-900);
+    box-shadow: var(--shadow-elevated);
+  }
+  .applied-form h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  .applied-form .sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 24px;
+  }
+  .applied-form .form-fine {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--gray-500);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* Applied FAQ */
+  .applied-faq {
+    background: var(--white);
+    padding: 96px 0;
+    color: var(--navy-900);
+  }
+  .faq-list { max-width: 880px; margin: 0 auto; }
+  .faq-item {
+    padding: 32px 0;
+    border-top: 1px solid var(--gray-200);
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+  }
+  .faq-item:last-child { border-bottom: 1px solid var(--gray-200); }
+  .faq-q {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy-900);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .faq-a {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--gray-700);
+  }
+
+  /* Applied footer */
+  .applied-footer {
+    background: var(--navy-900);
+    color: rgba(255,255,255,0.85);
+    padding: 80px 0 48px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--navy-700);
+  }
+  .footer-brand { display: flex; flex-direction: column; gap: 16px; max-width: 320px; }
+  .footer-brand .wm {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .footer-brand .wm .scale { color: var(--canary-500); }
+  .footer-brand p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.55;
+  }
+  .footer-col h5 {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { padding: 6px 0; }
+  .footer-col a {
+    color: rgba(255,255,255,0.68);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 240ms var(--ease);
+  }
+  .footer-col a:hover { color: var(--canary-500); }
+  .footer-fine {
+    padding-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+  }
+  .footer-fine p {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    max-width: 720px;
+  }
+  .footer-phone {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--canary-500);
+  }
+
+  /* Cover meta */
+  .cover-meta {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 32px;
+    max-width: 800px;
+  }
+  .cover-meta > div { padding-right: 24px; border-right: 1px solid rgba(255,255,255,0.18); }
+  .cover-meta > div:last-child { border-right: 0; }
+  .cover-meta dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 8px;
+  }
+  .cover-meta dd {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--white);
+  }
+
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--blue-600);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .section.navy .section-num { color: var(--blue-300); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .container { padding: 0 32px; }
+    .display-xl { font-size: 56px; }
+    .display-lg { font-size: 48px; }
+    .applied-h1 { font-size: 48px; }
+    .swatch-row { grid-template-columns: repeat(3, 1fr); }
+    .swatch-row.compact { grid-template-columns: repeat(4, 1fr); }
+    .toc-grid { grid-template-columns: repeat(3, 1fr); }
+    .applied-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .anti-row { grid-column: span 2; }
+    .vert-grid { grid-template-columns: repeat(2, 1fr); }
+    .img-grid { grid-template-columns: repeat(2, 1fr); }
+    .donts-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-meta { grid-template-columns: repeat(2, 1fr); row-gap: 24px; }
+    .hero-meta > div:nth-child(2) { border-right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================== NAV ============================== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#cover" class="nav-brand">
+      <img src="assets/favicon.svg" alt="" />
+      <span><span class="scale">Scale</span> Your Listings</span>
+    </a>
+    <div class="nav-meta">
+      <a href="#color">Color</a>
+      <a href="#type">Type</a>
+      <a href="#logo">Logo</a>
+      <a href="#components">Components</a>
+      <a href="#voice">Voice</a>
+      <a href="#playbook">Playbook</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================== HERO / COVER ============================== -->
+<section class="hero" id="cover">
+  <div class="container hero-inner">
+    <div class="eyebrow on-dark" style="margin-bottom: 48px;">
+      <span class="eyebrow-rule"></span>
+      Brand &amp; Design System · v1.0 · April 2026
+    </div>
+    <h1 class="display-xl">
+      The visual and verbal system for <span class="scale">Scale Your Listings</span>.
+    </h1>
+    <p class="hero-lede">
+      An AI-native, data-forward brand for the listing-acquisition platform delivering booked seller appointments and pay-per-closing economics to top-producing real estate agents. Engineer-not-realtor voice. HouseCanary-tier register. Canary-yellow as the brand-recognition exclamation point.
+    </p>
+    <dl class="hero-meta cover-meta">
+      <div><dt>Brand</dt><dd>Scale Your Listings</dd></div>
+      <div><dt>Parent</dt><dd>Cybersphere LLC</dd></div>
+      <div><dt>Vertical</dt><dd>Real estate · listing</dd></div>
+      <div><dt>Register</dt><dd>AI-native SaaS</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc">
+  <div class="container">
+    <div class="toc-grid">
+      <a href="#color" class="toc-item"><span class="toc-num">01</span><span class="toc-label">Color</span></a>
+      <a href="#type" class="toc-item"><span class="toc-num">02</span><span class="toc-label">Typography</span></a>
+      <a href="#logo" class="toc-item"><span class="toc-num">03</span><span class="toc-label">Logo system</span></a>
+      <a href="#components" class="toc-item"><span class="toc-num">04</span><span class="toc-label">Components</span></a>
+      <a href="#voice" class="toc-item"><span class="toc-num">05</span><span class="toc-label">Voice &amp; tone</span></a>
+      <a href="#imagery" class="toc-item"><span class="toc-num">06</span><span class="toc-label">Imagery</span></a>
+      <a href="#playbook" class="toc-item"><span class="toc-num">07</span><span class="toc-label">Section playbook</span></a>
+      <a href="#anti" class="toc-item"><span class="toc-num">08</span><span class="toc-label">Anti-patterns</span></a>
+      <a href="#applied" class="toc-item"><span class="toc-num">09</span><span class="toc-label">Applied example</span></a>
+      <a href="#parent" class="toc-item"><span class="toc-num">10</span><span class="toc-label">Parent &amp; family</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== 01 · COLOR ============================== -->
+<section class="section white" id="color">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">01 / Color</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>HouseCanary-tier data palette</div>
+      <h2 class="display-md" style="margin-top: 16px;">Signal blue. Deep navy. Warm white. <span class="accent-blue">Canary as exclamation.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">The palette reads as a modern data platform — HouseCanary, Linear, Stripe — built for an agent who lives in dashboards. Three core moves: signal-blue as the dominant interactive color, navy as the dark-anchor surface, alternating white and blue-50 surfaces for body rhythm. Canary yellow appears like an exclamation point: rare and deliberate, never as a button.</p>
+    </header>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px;">Primary · Signal blue</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-chip" style="background: #0A62FF;"></div><div class="swatch-meta"><div class="swatch-token">blue-600</div><div class="swatch-hex">#0A62FF</div><div class="swatch-use">Primary brand color. All primary CTAs, links, key accents. The dominant interactive color.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #0C62FF;"></div><div class="swatch-meta"><div class="swatch-token">blue-500</div><div class="swatch-hex">#0C62FF</div><div class="swatch-use">Hover state on blue-600. Gradient endpoint on hero/final CTA.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #6BA0FF;"></div><div class="swatch-meta"><div class="swatch-token">blue-400</div><div class="swatch-hex">#6BA0FF</div><div class="swatch-use">Lighter interactive. Eyebrow rule on dark. Subhead emphasis.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #8DB5FF;"></div><div class="swatch-meta"><div class="swatch-token">blue-300</div><div class="swatch-hex">#8DB5FF</div><div class="swatch-use">Soft accent on navy. Mono labels on dark surfaces.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #F2F7FF;"></div><div class="swatch-meta"><div class="swatch-token">blue-50</div><div class="swatch-hex">#F2F7FF</div><div class="swatch-use">Section background. Alternates with white for visual rhythm — the most-used neutral surface.</div></div></div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px; margin-top: 32px;">Anchor · Navy</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-chip" style="background: #20203F;"></div><div class="swatch-meta"><div class="swatch-token">navy-900</div><div class="swatch-hex">#20203F</div><div class="swatch-use">Primary headline color on light. Dark surfaces. Hero gradient anchor. Footer.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #2A2A4A;"></div><div class="swatch-meta"><div class="swatch-token">navy-800</div><div class="swatch-hex">#2A2A4A</div><div class="swatch-use">Hover on dark. Cards on navy. Subtle elevation.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #353560;"></div><div class="swatch-meta"><div class="swatch-token">navy-700</div><div class="swatch-hex">#353560</div><div class="swatch-use">Borders on navy surfaces. Dividers in dark hero/footer blocks.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #FFFFFF;"></div><div class="swatch-meta"><div class="swatch-token">white</div><div class="swatch-hex">#FFFFFF</div><div class="swatch-use">Default page surface. Card surface. Alternates with blue-50.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #EDEDED;"></div><div class="swatch-meta"><div class="swatch-token">gray-100</div><div class="swatch-hex">#EDEDED</div><div class="swatch-use">Section dividers. Subtle backgrounds.</div></div></div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px; margin-top: 32px;">Accent · Canary</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-chip" style="background: #F7CF46;"></div><div class="swatch-meta"><div class="swatch-token">canary-500</div><div class="swatch-hex">#F7CF46</div><div class="swatch-use">Brand accent. Brand-recognition moments only. Money-in stat figures (max 1 per page). The italic-gold equivalent for SYL.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #F7D56F;"></div><div class="swatch-meta"><div class="swatch-token">canary-400</div><div class="swatch-hex">#F7D56F</div><div class="swatch-use">Lighter canary, decorative. Hairlines on navy.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #FBEFC9;"></div><div class="swatch-meta"><div class="swatch-token">canary-100</div><div class="swatch-hex">#FBEFC9</div><div class="swatch-use">Tinted canary background. Gold-tier badge backgrounds.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #B23232;"></div><div class="swatch-meta"><div class="swatch-token">claret-600</div><div class="swatch-hex">#B23232</div><div class="swatch-use">Reserved. Genuine urgency only — statute, deadline. Never a button fill.</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: linear-gradient(180deg, #20203F 0%, #0C62FF 100%);"></div><div class="swatch-meta"><div class="swatch-token">gradient-hero</div><div class="swatch-hex">navy-900 → blue-500</div><div class="swatch-use">Reserved. Hero block + final CTA only. Two per page max.</div></div></div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px; margin-top: 32px;">Neutrals · Text + hairlines</h3>
+    <div class="swatch-row compact">
+      <div class="swatch"><div class="swatch-chip" style="background: #202020;"></div><div class="swatch-meta"><div class="swatch-token">gray-900</div><div class="swatch-hex">#202020</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #333333;"></div><div class="swatch-meta"><div class="swatch-token">gray-700</div><div class="swatch-hex">#333333</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #808C91;"></div><div class="swatch-meta"><div class="swatch-token">gray-500</div><div class="swatch-hex">#808C91</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #C4C4C4;"></div><div class="swatch-meta"><div class="swatch-token">gray-300</div><div class="swatch-hex">#C4C4C4</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #E6E9F1;"></div><div class="swatch-meta"><div class="swatch-token">gray-200</div><div class="swatch-hex">#E6E9F1</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #EDEDED;"></div><div class="swatch-meta"><div class="swatch-token">gray-100</div><div class="swatch-hex">#EDEDED</div></div></div>
+      <div class="swatch"><div class="swatch-chip" style="background: #F2F7FF; border-bottom-color: #E6E9F1;"></div><div class="swatch-meta"><div class="swatch-token">surface-alt</div><div class="swatch-hex">blue-50</div></div></div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px; margin-top: 32px;">Approved pairings</h3>
+    <div class="pair-row">
+      <div class="pair pair-1">
+        <div class="pair-headline">The AI listing engine for top producers. Pay only when listings <span class="scale">close</span>.</div>
+        <div class="pair-meta">navy-900 on white · blue-600 emphasis</div>
+      </div>
+      <div class="pair pair-2">
+        <div class="pair-headline">FSBOs get 12 calls in 90 minutes. We're the <span class="scale">first</span>.</div>
+        <div class="pair-meta">navy-900 on blue-50 · blue-600 emphasis</div>
+      </div>
+      <div class="pair pair-3">
+        <div class="pair-headline">Pay only when listings <span class="scale">close</span>.</div>
+        <div class="pair-meta">white on gradient · canary-500 emphasis</div>
+      </div>
+    </div>
+
+    <div class="color-rules">
+      <h3>Color rules · non-negotiable</h3>
+      <ul>
+        <li>Default surface alternates <strong style="color:#fff">white</strong> and <strong style="color:#fff">blue-50</strong>. The two-surface rhythm carries the page. No other body fills.</li>
+        <li>Default text on light is <strong style="color:#fff">navy-900</strong> for headlines, <strong style="color:#fff">gray-700 (#333)</strong> for body. On navy: white headlines, white-at-78% body.</li>
+        <li>Primary CTA is <strong style="color:#fff">blue-600 background, white text</strong>. Never another color. Never a gradient. Never canary.</li>
+        <li>Canary-500 is a brand-recognition exclamation point. Money-in stat (max 1 per page). Logo accent on dark. Never a button fill, never a body link, never a highlighter on prose.</li>
+        <li>The navy → blue gradient is reserved for the hero block and the final CTA section. Maximum two gradient sections per page.</li>
+        <li class="no">Black is forbidden as a section fill. The current GHL funnel page's black + yellow is the templated tell we are deliberately killing.</li>
+        <li class="no">Pure neon, electric cyan, lime, magenta — none. Reads as 2018 funnel, not 2026 AI platform.</li>
+        <li class="no">Canary on the wordmark in light contexts is forbidden. Canary stays on the mark for the dark variant.</li>
+        <li class="no">Claret is reserved for genuine urgency moments. Never as a CTA fill, never on more than one line per page.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 02 · TYPE ============================== -->
+<section class="section blue-50" id="type">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">02 / Typography</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Geometric display · clean sans · data mono</div>
+      <h2 class="display-md" style="margin-top: 16px;">Space Grotesk. Inter. <span class="accent-blue">Geist Mono.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">A geometric display sans for headlines, a clean grotesque for body and UI, a sharp mono for stats and dashboard data. The display carries the engineered register — Linear, Notion, HouseCanary share this stack. The mono is what makes numbers read as data, not prose.</p>
+    </header>
+
+    <div class="type-table" style="background: var(--white); padding: 48px; border: 1px solid var(--gray-200); border-radius: 10px;">
+      <div class="type-row">
+        <div class="type-meta"><span class="token">display-xl</span>Space Grotesk 600<span class="specs">80px · 1.05 · -0.025em</span></div>
+        <div class="type-sample-display" style="font-size: 80px; line-height: 1.05; letter-spacing: -0.025em;">The AI listing <span class="accent-blue">engine</span>.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">display-lg</span>Space Grotesk 600<span class="specs">64px · 1.1 · -0.02em</span></div>
+        <div class="type-sample-display" style="font-size: 64px; line-height: 1.1; letter-spacing: -0.02em;">Built by <span class="accent-blue">Stanford</span>.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">display-md</span>Space Grotesk 600<span class="specs">48px · 1.15 · -0.02em</span></div>
+        <div class="type-sample-display" style="font-size: 48px; line-height: 1.15; letter-spacing: -0.02em;">Speed wins listings.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">display-sm</span>Space Grotesk 600<span class="specs">36px · 1.2 · -0.015em</span></div>
+        <div class="type-sample-display" style="font-size: 36px; line-height: 1.2; letter-spacing: -0.015em;">Pay only when listings close.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">heading-lg</span>Space Grotesk 600<span class="specs">28px · 1.25 · -0.01em</span></div>
+        <div class="type-sample-display" style="font-size: 28px; line-height: 1.25; letter-spacing: -0.01em;">Why this team is different</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">heading-md</span>Space Grotesk 600<span class="specs">22px · 1.3 · -0.005em</span></div>
+        <div class="type-sample-display" style="font-size: 22px; line-height: 1.3; letter-spacing: -0.005em;">How long until I see my first booked listing appointment?</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">body-lg</span>Inter 400<span class="specs">18px · 1.55</span></div>
+        <div class="type-sample-sans" style="font-size: 18px; line-height: 1.55; max-width: 640px;">Sub-10-second contact on every FSBO, expired, and Zestimate inquiry. Listing appointments booked into your calendar with motivated sellers. Pay only when listings close.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">body-md</span>Inter 400<span class="specs">16px · 1.55</span></div>
+        <div class="type-sample-sans" style="font-size: 16px; line-height: 1.55; max-width: 640px; color: var(--gray-700);">Most "AI for real estate" is a CRM with a ChatGPT key wired in last quarter. Our voice AI is built model-up.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">stat-num</span>Geist Mono 500<span class="specs">56px · 1 · -0.02em</span></div>
+        <div class="type-sample-mono" style="font-size: 56px; line-height: 1; letter-spacing: -0.02em; font-weight: 500; color: var(--blue-600);">$72,000</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">mono-md</span>Geist Mono 500<span class="specs">14px · 1.4</span></div>
+        <div class="type-sample-mono" style="font-size: 14px; line-height: 1.4;">$2.4B · listing volume routed · trailing 12 months</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">mono-sm</span>Geist Mono UPPER<span class="specs">12px · 1.4 · 0.08em</span></div>
+        <div class="type-sample-mono" style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue-600); font-weight: 500;">01 / WHY THIS TEAM IS DIFFERENT</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="token">eyebrow</span>Space Grotesk UPPER<span class="specs">12px · 0.12em · 600</span></div>
+        <div class="type-sample-display" style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-600); font-weight: 600;">§ FOR LISTING-SIDE AGENTS · TOP PRODUCERS · SCALE PAST $400K GCI</div>
+      </div>
+    </div>
+
+    <div class="type-rules">
+      <div class="type-rules-block">
+        <h4>Numbers are data — always mono</h4>
+        <p>Every dollar figure, percentage, and time unit on the page goes through Geist Mono. "$72,000," "10 seconds," "12-day DOM" all read as dashboard output, not prose. Inline mono inside a sans paragraph is the most distinctive type move on the page — use it.</p>
+      </div>
+      <div class="type-rules-block">
+        <h4>Eyebrows do the section work</h4>
+        <p>Every H2 is preceded by a Space Grotesk eyebrow at 12px, 0.12em tracking, blue-600. Always paired with a 24px blue rule. The eyebrow + rule is the section-rhythm device — without it the page reads templated.</p>
+      </div>
+      <div class="type-rules-block">
+        <h4>All-caps is reserved</h4>
+        <p>Reserved for eyebrows and stat-block labels. Never run a headline in all-caps — that is the GHL funnel tell we are killing. Body copy is sentence-case Inter. Italics are forbidden in body copy.</p>
+      </div>
+      <div class="type-rules-block">
+        <h4>Constraints</h4>
+        <p>Body lines stay under 70 characters — constrain max-width on text columns. Headlines never exceed 12 words. If you need more, you have two headlines. The page rhythm needs whitespace, not text walls.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 03 · LOGO ============================== -->
+<section class="section white" id="logo">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">03 / Logo system</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Wordmark · mark · favicon</div>
+      <h2 class="display-md" style="margin-top: 16px;">The accented verb is the brand's <span class="accent-blue">most important</span> design decision.</h2>
+      <p class="lede body-lg" style="margin-top: 16px;">Sentence-case Space Grotesk Semibold. The verb "Scale" carries the brand-recognition color — blue-600 on light surfaces, canary-500 on dark — with "Your Listings" set in navy-900 (or white on dark). The mark is a stylized stepwise climbing line inside a 16px-radius rounded square. References data and growth without going near the house/key/roof clichés that mark every other vendor in the space.</p>
+    </header>
+
+    <div class="logo-grid">
+      <div class="logo-card light">
+        <div class="logo-card-meta">Wordmark · light surface</div>
+        <div class="logo-card-inner">
+          <img src="assets/logo-wordmark-light.svg" alt="Scale Your Listings wordmark on white" />
+        </div>
+      </div>
+      <div class="logo-card navy">
+        <div class="logo-card-meta">Wordmark · dark surface</div>
+        <div class="logo-card-inner">
+          <img src="assets/logo-wordmark-dark.svg" alt="Scale Your Listings wordmark on navy" />
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-secondary-grid">
+      <div class="logo-mark-card">
+        <img src="assets/logo-mark.svg" alt="Scale Your Listings mark" style="width: 160px; height: 160px;" />
+        <div class="label">Mark · light · 200px</div>
+      </div>
+      <div class="logo-mark-card dark">
+        <img src="assets/logo-mark-dark.svg" alt="Scale Your Listings mark on navy" style="width: 160px; height: 160px;" />
+        <div class="label">Mark · dark · 200px</div>
+      </div>
+      <div class="logo-mark-card">
+        <img src="assets/favicon.svg" alt="Scale Your Listings favicon" style="width: 64px; height: 64px;" />
+        <img src="assets/favicon.svg" alt="" style="width: 32px; height: 32px;" />
+        <img src="assets/favicon.svg" alt="" style="width: 16px; height: 16px;" />
+        <div class="label">Favicon · 64 / 32 / 16</div>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin: 32px 0 16px;">Construction</h3>
+    <div class="logo-construction">
+      <div class="construction-art">
+        <svg class="construction-svg" viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#0A62FF" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.4">
+            <line x1="0" y1="60" x2="720" y2="60"/>
+            <line x1="0" y1="170" x2="720" y2="170"/>
+            <line x1="40" y1="0" x2="40" y2="240"/>
+            <line x1="700" y1="0" x2="700" y2="240"/>
+          </g>
+          <text x="10" y="120" font-family="Geist Mono, monospace" font-size="10" fill="#0A62FF" letter-spacing="1">x</text>
+          <line x1="22" y1="60" x2="22" y2="170" stroke="#0A62FF" stroke-width="0.75"/>
+          <polyline points="19,65 22,60 25,65" fill="none" stroke="#0A62FF" stroke-width="0.75"/>
+          <polyline points="19,165 22,170 25,165" fill="none" stroke="#0A62FF" stroke-width="0.75"/>
+
+          <text x="40" y="156" font-family="Space Grotesk, system-ui, sans-serif" font-weight="600" font-size="100" fill="#0A62FF" letter-spacing="-3">Scale</text>
+          <text x="278" y="156" font-family="Space Grotesk, system-ui, sans-serif" font-weight="600" font-size="100" fill="#20203F" letter-spacing="-3">Your Listings</text>
+
+          <g stroke="#0A62FF" stroke-width="0.5">
+            <line x1="40" y1="190" x2="40" y2="210"/>
+            <line x1="100" y1="190" x2="100" y2="210"/>
+            <line x1="40" y1="200" x2="100" y2="200"/>
+          </g>
+          <text x="46" y="226" font-family="Geist Mono, monospace" font-size="9" fill="#0A62FF" letter-spacing="1">CLEAR x</text>
+        </svg>
+      </div>
+      <div>
+        <h4 class="heading-md" style="margin-bottom: 16px;">Clear space &amp; minimum size</h4>
+        <p class="body-md" style="color: var(--gray-700); margin-bottom: 16px;">Minimum clear space equals the cap-height of the "S" on all sides. The wordmark lockup is fixed: "Scale" carries the accent (blue-600 on light, canary-500 on dark), "Your Listings" sits in navy-900 (or white on dark).</p>
+        <p class="body-md" style="color: var(--gray-700); margin-bottom: 16px;">Minimum legible size for the wordmark is 140px wide on screen, 1.5in in print. Below that, switch to the square mark.</p>
+        <p class="body-md" style="color: var(--gray-700);">The mark's stepwise line is 10px stroke at 200×200 and scales proportionally — never below 2px. Four ascending segments. Dot at the endpoint. No fill on the line.</p>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--claret-600); margin: 64px 0 16px;">Don'ts</h3>
+    <div class="donts-grid">
+      <div class="dont">
+        <div class="dont-art">
+          <div style="font-family: var(--font-display); font-weight: 600; font-size: 28px; transform: skewX(-10deg); color: var(--navy-900); letter-spacing: -0.02em;"><span style="color: var(--blue-600);">Scale</span> Your Listings</div>
+        </div>
+        <div class="dont-label">Don't skew or italicize the lockup</div>
+      </div>
+      <div class="dont">
+        <div class="dont-art">
+          <div style="font-family: var(--font-display); font-weight: 600; font-size: 28px; color: var(--navy-900); letter-spacing: -0.02em;"><span style="color: var(--canary-500);">Scale</span> Your Listings</div>
+        </div>
+        <div class="dont-label">Don't use canary on the light wordmark</div>
+      </div>
+      <div class="dont">
+        <div class="dont-art" style="background: linear-gradient(135deg, #0A62FF, #20203F);">
+          <div style="font-family: var(--font-display); font-weight: 600; font-size: 28px; color: var(--white); letter-spacing: -0.02em;"><span style="color: var(--blue-300);">Scale</span> Your Listings</div>
+        </div>
+        <div class="dont-label">Don't place on gradient backgrounds</div>
+      </div>
+      <div class="dont">
+        <div class="dont-art" style="flex-direction: column; gap: 4px;">
+          <div style="font-family: var(--font-display); font-weight: 600; font-size: 22px; color: var(--navy-900); letter-spacing: -0.02em;"><span style="color: var(--blue-600);">Scale</span> Your Listings</div>
+          <div style="font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500);">The AI Engine for Top Producers</div>
+        </div>
+        <div class="dont-label">Don't add a tagline beneath the mark</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px; padding: 32px; background: var(--blue-50); border-radius: 10px; border-left: 3px solid var(--blue-600);">
+      <div class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px;">Lockup with parent</div>
+      <div style="display: flex; align-items: center; gap: 32px; flex-wrap: wrap;">
+        <div style="font-family: var(--font-display); font-weight: 600; font-size: 26px; color: var(--navy-900); letter-spacing: -0.02em;"><span style="color: var(--blue-600);">Scale</span> Your Listings</div>
+        <div style="width: 1px; height: 32px; background: var(--gray-200);"></div>
+        <div class="mono-sm" style="color: var(--gray-500);">A Cybersphere LLC company</div>
+      </div>
+      <p class="body-sm" style="margin-top: 16px; color: var(--gray-700); max-width: 720px;">Parent surfaces in footers, contracts, and founder bios only. Never in hero blocks, headlines, CTAs, ad copy, or slide 1 of any deck.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 04 · COMPONENTS ============================== -->
+<section class="section blue-50" id="components">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">04 / Components</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Buttons · stats · quotes · cards · forms</div>
+      <h2 class="display-md" style="margin-top: 16px;">5px button radius. 10px card radius. <span class="accent-blue">One CTA per surface.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">The brand reads modern-architectural — flat, decisive, data-forward. Border radius is 5px on buttons and inputs, 10px on cards, 16px on hero blocks. Borders are 1px gray-200 on light. Shadows are subtle (`shadow-card`); reserved (`shadow-elevated`) for the booking form and modals.</p>
+    </header>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Buttons</h3>
+        <p class="desc">Primary on light is blue-600 fill. Secondary is blue-600 outline. On navy, primary becomes white-fill. Approved CTA copy is reserved — never "Learn more," "Get started," "Book a demo," or "Free Listing Review."</p>
+      </div>
+      <div class="comp-stage">
+        <a class="btn-primary" href="#">Book the strategy call <span class="arrow">→</span></a>
+        <a class="btn-secondary" href="#">See the AI work a live FSBO call</a>
+        <a class="btn-link" href="#">Get the listing-pipeline audit →</a>
+      </div>
+      <div class="comp-stage navy" style="margin-top: 16px;">
+        <a class="btn-on-navy" href="#">Book the strategy call <span class="arrow">→</span></a>
+        <a class="btn-ghost-navy" href="#">Talk to the engineering team</a>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Stat callouts</h3>
+        <p class="desc">Numerals in Geist Mono at display size, Space Grotesk labels in gray-500 below. Default stat color is navy-900. Blue-600 for time/speed callouts. Canary-500 for one money-in stat per page maximum.</p>
+      </div>
+      <div class="comp-stage">
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-num blue">10s</div>
+            <div class="stat-label">First contact on every new seller inquiry</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num canary">$72,000</div>
+            <div class="stat-label">Avg. listing-side commission · live client roster</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">94%</div>
+            <div class="stat-label">Show-up rate on AI-booked appointments</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Inquiry types routed per agent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Pull quote</h3>
+        <p class="desc">Space Grotesk medium. 3px blue-600 left border. Attribution in Geist Mono UPPER, gray-500. Always include role, market/MSA, and a specific outcome. No italics — italics are forbidden in body copy.</p>
+      </div>
+      <div class="comp-stage">
+        <div>
+          <blockquote class="quote">
+            "Scale Your Listings rebuilt the way leads move through our pipeline. Their AI calls every new seller inquiry in under a minute and books the listing appointment before anyone on my team has lifted a phone."
+          </blockquote>
+          <div class="quote-attr">Marcus T. · Residential Listing Agent · Phoenix MSA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Eyebrow / kicker</h3>
+        <p class="desc">Space Grotesk SEMIBOLD UPPERCASE, 12px, 0.12em tracking. Blue-600 default; blue-300 on dark. Paired with a 24px rule. The "§" marker prefix is used on top-of-page eyebrows for a publication-style register.</p>
+      </div>
+      <div class="comp-stage" style="flex-direction: column; align-items: flex-start; gap: 32px;">
+        <div class="eyebrow"><span class="eyebrow-rule"></span>§ FOR LISTING-SIDE AGENTS · TOP PRODUCERS</div>
+        <div class="eyebrow on-light"><span class="eyebrow-rule"></span>02 / SPEED WINS LISTINGS</div>
+        <div class="eyebrow" style="color: var(--claret-600);"><span class="eyebrow-rule" style="background: var(--claret-600);"></span>LIMITED INTAKE · TOP-PRODUCING AGENTS</div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Inquiry-type cards</h3>
+        <p class="desc">Editorial cards on navy-800 with 1px navy-700 borders and a single canary corner accent. Mono label, display name, one body line. No icons — the dashboard register doesn't need them, and the funnel-card icon treatment is the templated tell.</p>
+      </div>
+      <div class="comp-stage navy">
+        <div class="vert-grid">
+          <div class="vert-card">
+            <div class="label">01 / FSBO</div>
+            <h4>For-sale-by-owner</h4>
+            <p>Listings get 12 calls in 90 minutes. We call first, qualify for motivation and timeline, and route only fits.</p>
+          </div>
+          <div class="vert-card">
+            <div class="label">02 / Expired</div>
+            <h4>Expired listings</h4>
+            <p>Sub-10-second contact on every newly-expired. Re-list price expectations verified before the calendar drop.</p>
+          </div>
+          <div class="vert-card">
+            <div class="label">03 / Zestimate</div>
+            <h4>Zestimate inquiries</h4>
+            <p>Curious sellers qualified for actual intent. Down-the-street and probate inquiries routed via the same flow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Process timeline</h3>
+        <p class="desc">Editorial timeline with mono timestamps in blue-600 on the left, display headings on the right. Each step separated by a 1px gray-200 rule. No icons, no bullets — the timestamps do the work.</p>
+      </div>
+      <div class="comp-stage">
+        <div class="process">
+          <div class="process-step">
+            <div class="process-time">0:00</div>
+            <div class="process-content">
+              <h4>Inquiry hits the pipeline</h4>
+              <p>FSBO ad, expired listing, Zestimate form, down-the-street request. The clock starts.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-time">+0:08</div>
+            <div class="process-content">
+              <h4>Voice AI calls and qualifies</h4>
+              <p>Sub-10-second contact. AI verifies seller motivation, timeline, and price expectations. Routes only retainable matters.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-time">+2:30</div>
+            <div class="process-content">
+              <h4>Listing appointment on your calendar</h4>
+              <p>Average click-to-booked time across live clients. You walk into pre-qualified seller meetings, on your calendar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Testimonial card</h3>
+        <p class="desc">White card, 10px radius, 1px gray-200 border, shadow-card. Quote in body-lg gray-700, attribution row with avatar (initial fallback acceptable; real consented headshots preferred), name in Space Grotesk 600 navy-900, meta in Inter 13px gray-500.</p>
+      </div>
+      <div class="comp-stage" style="justify-content: flex-start; gap: 16px;">
+        <div class="test-card">
+          <div class="quote-text">"Before Scale Your Listings we were doing $9M GCI a year. We're now on pace for $14M, and the AI is the only thing in my stack that pays for itself in 30 days."</div>
+          <div class="attr">
+            <div class="avatar">JR</div>
+            <div>
+              <div class="name">Jennifer R.</div>
+              <div class="meta">Broker-Owner · Austin Metro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Form card</h3>
+        <p class="desc">White card on navy stage, 10px radius, 1px gray-200 border. Mono labels above each input, blue-600 focus ring (3px rgba), blue-600 fill primary CTA. Form fine print in Inter 12px gray-500. Reserved for the strategy-call booker.</p>
+      </div>
+      <div class="comp-stage navy" style="justify-content: flex-start;">
+        <div class="form-card">
+          <div class="form-eyebrow">Strategy call · 25 min · No pitch</div>
+          <h4>Map the AI to your listing pipeline.</h4>
+          <div class="form-row">
+            <label>Brokerage</label>
+            <input type="text" placeholder="Compass · Phoenix" />
+          </div>
+          <div class="form-row">
+            <label>Annual GCI</label>
+            <select>
+              <option>$5M – $10M</option>
+              <option>$10M – $25M</option>
+              <option>$25M – $50M</option>
+              <option>$50M+</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Direct line</label>
+            <input type="tel" placeholder="(602) 555-0100" />
+          </div>
+          <button class="btn-primary"><span>Book the strategy call</span> <span class="arrow">→</span></button>
+          <p class="form-fine">25 min. No pitch. Live AI demo on the call, mapped to your current listing pipeline. By submitting you agree to be contacted.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Pill tags</h3>
+        <p class="desc">Pill tags are the one exception to the 5/10px corner rule — fully-rounded (999px). Space Grotesk Semibold UPPER, 12px, 0.04em tracking. Reserved for category metadata. Never used as a button.</p>
+      </div>
+      <div class="comp-stage">
+        <div class="tag-row">
+          <span class="tag">FSBO</span>
+          <span class="tag">Expired</span>
+          <span class="tag">Zestimate</span>
+          <span class="tag outline">Down-the-street</span>
+          <span class="tag outline">Probate</span>
+          <span class="tag canary">Pay-per-closing</span>
+          <span class="tag claret">Limited intake</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>"Proof from the inbox" card</h3>
+        <p class="desc">Gallery-format card mirroring the 7FS / SMC inbox-proof pattern. Gmail or iMessage UI, hand-drawn claret oval annotation around the most important dollar figure, mono caption underneath. Used in the section-7 6-card gallery (3×2 desktop, 1×6 mobile).</p>
+      </div>
+      <div class="comp-stage">
+        <div class="inbox-card">
+          <div class="inbox-head">
+            <div class="from">Joseph S. <span>· <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcd6d3cfd9ccd4fcccddced7ddcad9d2c9d9ced992dfd3d1">[email&#160;protected]</a></span></div>
+            <div class="when">8:42 AM</div>
+          </div>
+          <div class="inbox-body">
+            Closing update — FSBO from Tuesday's batch. Listing agreement signed yesterday at <span class="annot">$72,000</span> commission, listing-side. Pretty wild given the ad just went live the day before. Send 50 more agents like me your way — we're going to need the bandwidth.
+          </div>
+          <div class="inbox-cap">
+            01 · $72,000 first listing closed · day after FSBO ad launched
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-head">
+        <h3>Trust badge strip</h3>
+        <p class="desc">Five to six small badges. 50% opacity by default. No drop shadows, no boxes. "130+ TOP PRODUCERS · $2.4B IN LISTING VOLUME · STANFORD · HARVARD · MIT" — every claim must be defensible.</p>
+      </div>
+      <div class="comp-stage" style="justify-content: center;">
+        <div class="badges">
+          <div class="badge">130+ <span class="small">Top Producers</span></div>
+          <div class="badge">$2.4B <span class="small">Listing Volume Routed</span></div>
+          <div class="badge">Stanford <span class="small">Engineering</span></div>
+          <div class="badge">Harvard <span class="small">Engineering</span></div>
+          <div class="badge">MIT <span class="small">Engineering</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 05 · VOICE ============================== -->
+<section class="section white" id="voice">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">05 / Voice &amp; tone</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Engineer-not-realtor · AI-native SaaS register</div>
+      <h2 class="display-md" style="margin-top: 16px;">Sound like the team that <span class="accent-blue">built</span> the thing — not the team that sells it.</h2>
+      <p class="lede body-lg" style="margin-top: 16px;">Senior PM at Stripe writing a launch post for a real estate vertical product. Or HouseCanary explaining a new analytics endpoint. Confident, plain-spoken, technical when it earns its keep, listing-agent vocabulary throughout. Never the Tom Ferry / Mike Ferry / KW-eXp-REMAX coaching register.</p>
+    </header>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin-bottom: 24px;">Six principles</h3>
+    <div class="principles">
+      <div class="principle">
+        <div class="num">01</div>
+        <h4>Direct</h4>
+        <p>Lead with the claim. Proof follows. Never bury the lede.</p>
+      </div>
+      <div class="principle">
+        <div class="num">02</div>
+        <h4>Numbers, not adjectives</h4>
+        <p>"Sub-10-second contact" beats "fast." "$72,000 average commission" beats "high-value."</p>
+      </div>
+      <div class="principle">
+        <div class="num">03</div>
+        <h4>Engineer-not-realtor</h4>
+        <p>The brand is the engineering team, not a coach. Avoid the agent-coaching voice entirely.</p>
+      </div>
+      <div class="principle">
+        <div class="num">04</div>
+        <h4>Listing-agent register</h4>
+        <p>Speak in GCI, MLS, DOM, CMA, BPO, FSBO. Not "real estate" — that's the outsider register.</p>
+      </div>
+      <div class="principle">
+        <div class="num">05</div>
+        <h4>Short sentences</h4>
+        <p>Single ideas per line. Cut the connective tissue. Compound sentences are a smell.</p>
+      </div>
+      <div class="principle">
+        <div class="num">06</div>
+        <h4>Confident, not boastful</h4>
+        <p>State what is true. Let the reader infer the implication. Top producers respect specificity, distrust hype.</p>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin: 64px 0 24px;">On-brand vs. off-brand</h3>
+    <div class="voice-grid">
+      <div class="voice-card on">
+        <div class="tag-line">✓ On-brand</div>
+        <blockquote>"Our voice AI calls every Zestimate inquiry, FSBO listing, and expired ad in under 10 seconds. It qualifies for seller motivation, timeline, and price expectations. It books the listing appointment directly into your calendar. If a listing does not close, you do not pay."</blockquote>
+      </div>
+      <div class="voice-card off">
+        <div class="tag-line">✗ Off-brand</div>
+        <blockquote>"At Scale Your Listings, we believe every top-producing agent deserves access to cutting-edge AI technology that empowers them to leverage their existing relationships and unlock 10X listing growth."</blockquote>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin: 64px 0 24px;">Word bank</h3>
+    <div class="word-bank">
+      <div class="word-list use">
+        <h4>✓ Required brand verbs &amp; nouns</h4>
+        <ul>
+          <li>scale (verb)</li>
+          <li>listing</li>
+          <li>closing</li>
+          <li>GCI</li>
+          <li>MLS</li>
+          <li>DOM</li>
+          <li>FSBO</li>
+          <li>CMA / BPO</li>
+          <li>expired</li>
+          <li>Zestimate</li>
+          <li>down-the-street</li>
+          <li>probate</li>
+          <li>sub-10-second</li>
+          <li>engineered</li>
+          <li>model-up</li>
+          <li>built in-house</li>
+          <li>route / qualify</li>
+          <li>pay only when</li>
+        </ul>
+      </div>
+      <div class="word-list banned">
+        <h4>✗ Banned words &amp; phrases</h4>
+        <ul>
+          <li>abundance</li>
+          <li>mindset</li>
+          <li>leverage</li>
+          <li>synergize</li>
+          <li>unlock</li>
+          <li>harness</li>
+          <li>world-class</li>
+          <li>cutting-edge</li>
+          <li>innovative</li>
+          <li>transform</li>
+          <li>revolutionary</li>
+          <li>game-changing</li>
+          <li>next-level</li>
+          <li>"crush it"</li>
+          <li>"10X"</li>
+          <li>"massive action"</li>
+          <li>"build relationships"</li>
+          <li>"high-touch"</li>
+          <li>"white glove"</li>
+          <li>"concierge"</li>
+          <li>"we believe"</li>
+          <li>"we are passionate"</li>
+          <li>"in today's competitive"</li>
+          <li>em dashes in body</li>
+          <li>! in body (1/page max)</li>
+          <li>👇 emoji arrows</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin: 64px 0 24px;">CTA copy library</h3>
+    <div class="cta-bank">
+      <div class="cta-list use">
+        <h4>✓ Approved CTA copy</h4>
+        <ul>
+          <li>Book the strategy call</li>
+          <li>See the AI work a live FSBO call</li>
+          <li>Get the listing-pipeline audit</li>
+          <li>Talk to the engineering team</li>
+          <li>See if you qualify to work with us</li>
+        </ul>
+      </div>
+      <div class="cta-list no">
+        <h4>✗ Forbidden CTA copy</h4>
+        <ul>
+          <li>Learn more</li>
+          <li>Get started</li>
+          <li>Book a demo</li>
+          <li>Contact us</li>
+          <li>Sign up today</li>
+          <li>Free Listing Review</li>
+          <li>Click here 👇</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="mono-sm" style="color: var(--blue-600); margin: 64px 0 24px;">The wedge — memorize this line</h3>
+    <div style="padding: 48px; background: var(--blue-50); border-radius: 10px; border-left: 3px solid var(--blue-600); max-width: 880px;">
+      <p style="font-family: var(--font-display); font-weight: 600; font-size: 30px; line-height: 1.3; color: var(--navy-900); letter-spacing: -0.015em;">"Their CRMs added AI in a sprint. Ours <span class="accent-blue">started with AI</span> and got a CRM later."</p>
+      <p class="mono-sm" style="color: var(--gray-500); margin-top: 24px;">Never name competitors directly. Let the contrast do the work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 06 · IMAGERY ============================== -->
+<section class="section blue-50" id="imagery">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">06 / Imagery &amp; illustration</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Dashboard UI · data viz · annotated artifacts</div>
+      <h2 class="display-md" style="margin-top: 16px;">Product UI screenshots. Geometric data viz. <span class="accent-blue">No suburban-house stock.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">Imagery defaults to the product itself — listing-pipeline dashboards, voice-AI call transcripts, MLS heatmaps. Custom-rendered, never stock. The data-platform aesthetic is what makes the brand legible to a HouseCanary-fluent buyer.</p>
+    </header>
+
+    <div class="img-grid">
+      <div class="img-card">
+        <div class="img-art img-art-1">
+          <svg width="80%" viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="100" x2="240" y2="100" stroke="#E6E9F1" stroke-width="0.5"/>
+            <polyline points="0,90 30,85 60,70 90,72 120,55 150,40 180,35 210,22 240,15" fill="none" stroke="#0A62FF" stroke-width="2.5"/>
+            <polyline points="0,95 30,93 60,88 90,89 120,80 150,75 180,72 210,68 240,65" fill="none" stroke="#8DB5FF" stroke-width="1" stroke-dasharray="2 3"/>
+            <circle cx="240" cy="15" r="3.5" fill="#F7CF46"/>
+          </svg>
+        </div>
+        <div class="img-meta">
+          <div class="label">✓ Use · Data viz</div>
+          <div class="desc">Sparklines, GCI charts, DOM-by-neighborhood. Primary line blue-600, secondary blue-300 dashed, canary endpoint dot.</div>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-art img-art-2">
+          <div style="width: 80%; background: #2A2A4A; border: 1px solid #353560; border-radius: 6px; padding: 14px; font-family: var(--font-mono); font-size: 11px; line-height: 1.55; color: rgba(255,255,255,0.85);">
+            <div style="color: #6BA0FF; margin-bottom: 6px;">[ 14:22:08 · OUTBOUND · FSBO ]</div>
+            <div>AI: "Hi, this is regarding your listing on Cactus Wren — are you the homeowner?"</div>
+            <div style="color: #8DB5FF; margin-top: 4px;">SELLER: "Yeah, that's me."</div>
+            <div style="margin-top: 4px;">AI: "Are you working with an agent yet, or selling on your own?"</div>
+            <div style="color: var(--canary-500); margin-top: 6px;">→ ROUTE · qualified · listing appt 2:30p</div>
+          </div>
+        </div>
+        <div class="img-meta">
+          <div class="label">✓ Use · Voice-AI transcript</div>
+          <div class="desc">Mono-formatted call output. Navy surface, blue/canary tagging. Reads as dashboard log, not marketing copy.</div>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-art img-art-3">
+          <div style="position: relative; width: 70%;">
+            <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; padding: 16px; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; color: var(--gray-700); box-shadow: var(--shadow-card);">
+              FSBO listing closed yesterday at <span style="border: 1.5px solid var(--claret-600); border-radius: 16px; padding: 1px 6px; color: var(--claret-600); font-weight: 600; transform: rotate(-2deg); display: inline-block;">$72,000</span> commission. The ad just went live the day before.
+            </div>
+          </div>
+        </div>
+        <div class="img-meta">
+          <div class="label">✓ Use · Hand-annotated artifact</div>
+          <div class="desc">Claret-ink circle on screenshots. Looks like a partner reviewed the email and circled the dollar figure in pen.</div>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-art" style="background: linear-gradient(135deg, #00d4ff, #ff00ff); position: relative;">
+          <div style="position: absolute; inset: 16px; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="20" fill="none" stroke="white" stroke-width="2"/>
+              <circle cx="30" cy="30" r="12" fill="none" stroke="white" stroke-width="1" opacity="0.6"/>
+              <circle cx="30" cy="30" r="4" fill="white"/>
+            </svg>
+          </div>
+        </div>
+        <div class="img-meta">
+          <div class="label" style="color: var(--claret-600);">✗ Never · AI cliché</div>
+          <div class="desc">Glowing networks, circuit boards, neon gradients, "AI brain" iconography. The 2018-SaaS visual we are killing.</div>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-art" style="background: #d8d8d8;">
+          <div style="display: flex; gap: 8px;">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #999; border: 4px solid white;"></div>
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #aaa; border: 4px solid white;"></div>
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #888; border: 4px solid white;"></div>
+          </div>
+        </div>
+        <div class="img-meta">
+          <div class="label" style="color: var(--claret-600);">✗ Never · Suit-handshake stock</div>
+          <div class="desc">Agents in suits in front of houses. "Sold" signs. Suburban hero shots. Sticky-note coaching. All forbidden.</div>
+        </div>
+      </div>
+      <div class="img-card">
+        <div class="img-art" style="background: var(--white);">
+          <svg width="80%" viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" y1="60" x2="220" y2="60" stroke="#0A62FF" stroke-width="0.75"/>
+            <circle cx="40" cy="60" r="4" fill="#0A62FF"/>
+            <circle cx="120" cy="60" r="4" fill="#0A62FF"/>
+            <circle cx="200" cy="60" r="4" fill="#F7CF46"/>
+            <text x="40" y="40" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#808C91" letter-spacing="1">0:00</text>
+            <text x="120" y="40" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#808C91" letter-spacing="1">+0:08</text>
+            <text x="200" y="40" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" fill="#808C91" letter-spacing="1">+2:30</text>
+            <text x="40" y="85" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="11" fill="#20203F">inquiry</text>
+            <text x="120" y="85" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="11" fill="#20203F">qualified</text>
+            <text x="200" y="85" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="11" fill="#20203F">booked</text>
+          </svg>
+        </div>
+        <div class="img-meta">
+          <div class="label">✓ Use · Editorial diagram</div>
+          <div class="desc">Geometric, blue-on-white or canary-on-navy. Mono labels, display headings. One canary endpoint per diagram.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 07 · SECTION PLAYBOOK ============================== -->
+<section class="section white" id="playbook">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">07 / Section playbook</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Landing-page composition order</div>
+      <h2 class="display-md" style="margin-top: 16px;">Adapt the conventions. <span class="accent-blue">Avoid the templated tells.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">Mirror the proven 7 Figure Smiles / Sign More Cases section pattern, adapted for real estate. Structure stays. Aesthetic flips. Each section is modular — swap individual sections for A/B variants without rebuilding.</p>
+    </header>
+
+    <div class="playbook">
+      <div class="play-row">
+        <div class="play-num">00</div>
+        <div class="play-name">Top dark strip</div>
+        <div class="play-desc">Full-bleed navy strip. Single-line eyebrow with GCI register: "§ FOR LISTING-SIDE AGENTS · TOP PRODUCERS SCALING PAST $400K GCI." Canary on the dollar figure.</div>
+        <div class="play-surface navy">navy-900 strip</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">01</div>
+        <div class="play-name">Hero</div>
+        <div class="play-desc">Eyebrow + display-xl Space Grotesk headline (italic-color "Scale" via canary on dark) + body-lg subtitle + blue-600 primary CTA + outlined secondary CTA + mono trust microstrip. Optional white phone-capture form on the right.</div>
+        <div class="play-surface navy">gradient · navy → blue-500</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">02</div>
+        <div class="play-name">Stat bar</div>
+        <div class="play-desc">3–4 stat callouts in a horizontal row. Mono numerals at 56px. One blue (speed), one canary (money), rest navy. Real client data only — defensible figures or pull.</div>
+        <div class="play-surface blue">blue-50 strip</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">03</div>
+        <div class="play-name">The wedge — "Why this team is different"</div>
+        <div class="play-desc">Three 01/02/03 numbered pillars with mono timestamps on the left. Attract → Qualify → Book &amp; Win. Closing line: "Every CRM before us added AI in a sprint. We started with AI."</div>
+        <div class="play-surface white">white</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">04</div>
+        <div class="play-name">Live AI demo invitation</div>
+        <div class="play-desc">"See the AI work a live FSBO call." 4-bullet promise list. 25 minutes, no pitch. No CTA in this section — the hero CTA stays sticky.</div>
+        <div class="play-surface blue">blue-50</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">05</div>
+        <div class="play-name">Inquiry-type cards</div>
+        <div class="play-desc">3×1 grid of editorial cards on navy: FSBO · Expired · Zestimate (+ down-the-street, probate). Mono label, display name, one body line. No icons.</div>
+        <div class="play-surface navy">navy-900</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">06</div>
+        <div class="play-name">Testimonials</div>
+        <div class="play-desc">3-card row. Marcus T. · Jennifer R. · David K. (preserve names from current page; verify consent). Real outcomes, MSA attribution. Avatar circles allowed (not banned the way they are for SMC).</div>
+        <div class="play-surface white">white</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">07</div>
+        <div class="play-name">Proof from the inbox</div>
+        <div class="play-desc">3×2 grid of inbox-proof cards. Gmail + iMessage + dashboard composites. Hand-drawn claret oval on the most important dollar figure in 4 of 6. Mono caption underneath each.</div>
+        <div class="play-surface blue">blue-50</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">08</div>
+        <div class="play-name">FAQ</div>
+        <div class="play-desc">Maximum 6 questions. Space Grotesk 600 questions, Inter 15px answers in gray-700. ~150 words per answer. Default first question open.</div>
+        <div class="play-surface white">white</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">09</div>
+        <div class="play-name">Final CTA</div>
+        <div class="play-desc">Display-lg "Pay only when listings close." Single white-fill CTA on gradient. 25 min. No pitch line. The second (and last) gradient section on the page.</div>
+        <div class="play-surface navy">gradient · navy → blue-500</div>
+      </div>
+      <div class="play-row">
+        <div class="play-num">10</div>
+        <div class="play-name">Footer</div>
+        <div class="play-desc">Logo dark variant (canary "Scale"), three columns, parent attribution, full disclaimer in mono-xs at 40% opacity. Facebook/Meta trademark line per current page.</div>
+        <div class="play-surface navy">navy-900</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 08 · ANTI-PATTERNS ============================== -->
+<section class="section blue-50" id="anti">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">08 / Anti-patterns</span>
+      <div class="eyebrow on-light" style="color: var(--claret-600);"><span class="eyebrow-rule" style="background: var(--claret-600);"></span>GHL funnel · what we are killing</div>
+      <h2 class="display-md" style="margin-top: 16px;">If unsure, default to <span class="accent-blue">HouseCanary.</span> Not GoHighLevel.</h2>
+      <p class="lede body-lg" style="margin-top: 16px;">When in doubt, choose whichever option looks less like a templated lead-gen funnel and more like a HouseCanary or Linear product page. The current scaleyourlistings.getcybersphere.com page uses several patterns we are deliberately killing — black background, all-caps yellow headlines, 👇 arrow emojis. The contrasts below are precise.</p>
+    </header>
+
+    <div class="anti-grid">
+      <div class="anti-row">
+        <div class="anti-cell no">
+          <div class="tag-line">✗ Templated GHL funnel</div>
+          <div class="templated-eyebrow">👇 LOOKING TO SCALE PAST $20,000/MO 👇</div>
+          <div class="templated-headline">IMPLEMENT OUR <em>AI</em><br/>INTO YOUR PIPELINE!</div>
+          <div class="templated-cta">★ FREE LISTING REVIEW ★</div>
+        </div>
+        <div class="anti-cell yes">
+          <div class="tag-line">✓ Scale Your Listings</div>
+          <div class="eyebrow on-light" style="margin-bottom: 16px;"><span class="eyebrow-rule"></span>§ FOR LISTING-SIDE AGENTS · TOP PRODUCERS</div>
+          <div class="ours-headline">The AI listing engine for top producers.</div>
+          <a class="btn-primary" href="#" style="margin-top: 24px; align-self: flex-start;">Book the strategy call <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+      <div class="anti-row">
+        <div class="anti-cell no">
+          <div class="tag-line">✗ Black + yellow funnel CTA</div>
+          <p style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; color: #FFD700; margin-bottom: 16px;">Get Your Free Listing Review Today!</p>
+          <a class="templated-cta" style="margin-top: 0;">START NOW 👇</a>
+        </div>
+        <div class="anti-cell yes" style="background: linear-gradient(180deg, #20203F 0%, #0C62FF 130%); color: white; border-left: 1px solid var(--navy-800);">
+          <div class="tag-line" style="color: var(--canary-400);">✓ White CTA on gradient</div>
+          <p class="body-md" style="color: rgba(255,255,255,0.85); margin-bottom: 24px; max-width: 320px;">Pay only when listings close. 25 minutes. No pitch.</p>
+          <a class="btn-on-navy" href="#" style="align-self: flex-start;">Book the strategy call <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+      <div class="anti-row">
+        <div class="anti-cell no">
+          <div class="tag-line">✗ Yellow highlighter on body</div>
+          <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: white; line-height: 1.5;">Our system gets you <span style="background: #FFD700; color: #111; padding: 1px 4px;">10+ qualified listing appointments</span> on your calendar within <span style="background: #FFD700; color: #111; padding: 1px 4px;">30 days</span> or <span style="background: #FFD700; color: #111; padding: 1px 4px;">YOU DON'T PAY!!!</span></p>
+        </div>
+        <div class="anti-cell yes">
+          <div class="tag-line">✓ Stat callout, not highlighter</div>
+          <div class="stat-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat" style="border-right: 1px solid var(--gray-200);">
+              <div class="stat-num blue" style="font-size: 40px;">10+</div>
+              <div class="stat-label">Listing appointments · first 30 days</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num canary" style="font-size: 40px;">$0</div>
+              <div class="stat-label">Owed if no listing closes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="anti-row">
+        <div class="anti-cell no">
+          <div class="tag-line">✗ Initial-circle testimonial</div>
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #FFD700; color: #111; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px;">M</div>
+            <div>
+              <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: white; margin-bottom: 4px;">"Best listing system ever! 🔥🔥🔥 10/10!!"</p>
+              <p style="font-family: 'Inter', sans-serif; font-size: 11px; color: #FFD700;">— Marcus T.</p>
+            </div>
+          </div>
+        </div>
+        <div class="anti-cell yes">
+          <div class="tag-line">✓ Editorial testimonial card</div>
+          <div class="test-card" style="max-width: none; padding: 24px; box-shadow: none;">
+            <div class="quote-text" style="font-size: 14px;">"Scale Your Listings books the listing appointment before anyone on my team has lifted a phone."</div>
+            <div class="attr">
+              <div class="avatar">MT</div>
+              <div>
+                <div class="name">Marcus T.</div>
+                <div class="meta">Residential Listing Agent · Phoenix MSA</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 09 · APPLIED ============================== -->
+<div id="applied" style="background: var(--white); border-top: 1px solid var(--gray-200); padding: 96px 0 0;">
+  <div class="container">
+    <header class="section-head" style="margin-bottom: 0;">
+      <div style="text-align: left; max-width: 720px; margin: 0 auto;">
+        <span class="section-num">09 / Applied example</span>
+        <div class="eyebrow on-light"><span class="eyebrow-rule"></span>The system in motion</div>
+        <h2 class="display-md" style="margin-top: 16px;">A landing page in this system. <span class="accent-blue">Hero, FAQ, footer.</span></h2>
+        <p class="lede body-lg" style="margin-top: 16px;">The system applied end-to-end on a single warm-traffic surface. Hero on the gradient, FAQ on white, footer on navy. Every token, type ramp, and component referenced above appears here in production form.</p>
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- Applied Hero -->
+<section class="applied">
+  <div class="applied-frame">
+    <div class="container">
+      <div class="eyebrow on-dark" style="margin-bottom: 48px;">
+        <span class="eyebrow-rule"></span>
+        § FOR LISTING-SIDE AGENTS · TOP PRODUCERS SCALING PAST $400K GCI
+      </div>
+      <div class="applied-grid">
+        <div>
+          <h1 class="applied-h1">
+            The AI listing engine for <span class="scale">top producers</span>.
+          </h1>
+          <p class="applied-sub">
+            Sub-10-second contact on every FSBO, expired, and Zestimate inquiry. Listing appointments booked into your calendar with motivated sellers. Pay only when listings close.
+          </p>
+          <div class="applied-cta-row">
+            <a class="btn-on-navy" href="#">Book the strategy call <span class="arrow">→</span></a>
+            <a class="btn-ghost-navy" href="#">See the AI work a live FSBO call</a>
+          </div>
+          <div class="applied-stats">
+            <div class="applied-stat">
+              <div class="applied-stat-num">10s</div>
+              <div class="applied-stat-label">First contact on every new inquiry</div>
+            </div>
+            <div class="applied-stat">
+              <div class="applied-stat-num canary">$72K</div>
+              <div class="applied-stat-label">Avg. listing-side commission · live roster</div>
+            </div>
+            <div class="applied-stat">
+              <div class="applied-stat-num">94%</div>
+              <div class="applied-stat-label">Show-up rate · AI-booked appts</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="applied-form">
+          <div class="form-eyebrow">Strategy call · 25 min · No pitch</div>
+          <h3>Map the AI to your listing pipeline.</h3>
+          <div class="sub" style="margin-top: -12px; margin-bottom: 24px;">Fit told straight on the call.</div>
+          <div class="form-row">
+            <label>Brokerage</label>
+            <input type="text" placeholder="Compass · Phoenix" />
+          </div>
+          <div class="form-row">
+            <label>Annual GCI</label>
+            <select>
+              <option>$5M – $10M</option>
+              <option>$10M – $25M</option>
+              <option>$25M – $50M</option>
+              <option>$50M+</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Direct line</label>
+            <input type="tel" placeholder="(602) 555-0100" />
+          </div>
+          <button class="btn-primary"><span>Book the strategy call</span> <span class="arrow">→</span></button>
+          <p class="form-fine">25 min. No pitch. We map the AI to your current listing pipeline on the call.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Applied FAQ -->
+<section class="applied-faq">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">FAQ</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>What top producers ask</div>
+      <h2 class="display-md" style="margin-top: 16px;">Six questions. <span class="accent-blue">Plain answers.</span></h2>
+    </header>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">What does pay-per-closing actually mean?</div>
+        <div class="faq-a">You do not pay for leads, contacts, names, or even appointments. You pay when a listing closes and the commission hits. The infrastructure carries the risk because it earns the right to. We measure cost-per-closing against your historical CPL on the strategy call so the math is clear before you commit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How is this different from kvCORE / BoomTown / FollowUpBoss?</div>
+        <div class="faq-a">Most legacy real estate platforms are 2018-era CRMs that bolted "AI" features on in late 2023. We built the voice agent, the qualification logic, and the appointment-booking engine ourselves at the model layer. The team is Stanford, Harvard, and MIT engineers from frontier labs. Sub-10-second first contact, average 2:30 from inquiry to booked listing appointment.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need to switch CRMs?</div>
+        <div class="faq-a">No. We don't replace your CRM, your IDX, or your transaction management. We sit upstream of all of it — capturing inquiries, qualifying with the voice AI, and dropping booked listing appointments into whatever calendar you already use.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long until I see my first booked listing appointment?</div>
+        <div class="faq-a">Two weeks from signed agreement to first routed appointment. Week one is intake-flow mapping and AI training on your case-type criteria. Week two is parallel running against your existing intake to calibrate qualification thresholds.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens if a listing doesn't close?</div>
+        <div class="faq-a">You don't pay. There is no monthly retainer, no per-lead fee, no setup charge. The only invoice that hits your books is when a listing closes and the commission has been earned.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Which markets and MLSs do you support?</div>
+        <div class="faq-a">Primary coverage in the top-50 US MSAs. We onboard one MLS at a time and verify IDX feeds, broker authorization, and TCPA compliance posture for the geography on the strategy call. If we're not a fit for your market, we'll point you to what you should be doing instead.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Applied Footer -->
+<footer class="applied-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="wm"><span class="scale">Scale</span> Your Listings</div>
+        <p>The AI listing engine for top producers. Pay only when listings close. Built in-house by a Stanford, Harvard, and MIT engineering team.</p>
+        <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: rgba(255,255,255,0.5);">A Cybersphere LLC company.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Engineering</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#">Voice AI intake</a></li>
+          <li><a href="#">FSBO &amp; expired routing</a></li>
+          <li><a href="#">Listing-pipeline orchestration</a></li>
+          <li><a href="#">Pay-per-closing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">Book the strategy call</a></li>
+          <li><a href="#">Engineering inquiries</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-fine">
+      <p>Scale Your Listings provides marketing and intake infrastructure for real estate agents and brokers. We are not a real estate brokerage and do not list, sell, or buy property. All real estate transactions are conducted by licensed real estate professionals. Performance figures cited reflect representative results from client agents and teams. Individual results vary based on geography, listing inventory, market conditions, and agent execution. Equal Housing Opportunity. Scale Your Listings is a DBA of Cybersphere LLC. © 2026 Cybersphere LLC.</p>
+      <div class="footer-phone">Cybersphere LLC</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================== 10 · PARENT & FAMILY ============================== -->
+<section class="section white" id="parent">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">10 / Parent &amp; family</span>
+      <div class="eyebrow on-light"><span class="eyebrow-rule"></span>Cybersphere LLC · three DBAs · deliberately distinct</div>
+      <h2 class="display-md" style="margin-top: 16px;">Same engineering team. <span class="accent-blue">Three different brand worlds.</span></h2>
+      <p class="lede body-lg" style="margin-top: 16px;">Scale Your Listings is a DBA of Cybersphere LLC, alongside 7 Figure Smiles (cosmetic dental) and Sign More Cases (PI law). Each DBA's visual register is calibrated for its ICP — agents live in dashboards, lawyers respect editorial gravitas, dentists respond to magazine premium. The shared engineering team is the only constant.</p>
+    </header>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+      <div style="border: 1px solid var(--gray-200); border-radius: 10px; padding: 32px; background: var(--white);">
+        <div class="mono-sm" style="color: var(--gray-500); margin-bottom: 16px;">DBA · Cosmetic dental</div>
+        <h4 class="heading-md" style="margin-bottom: 12px;">7 Figure Smiles</h4>
+        <p class="body-sm" style="color: var(--gray-700);">Cream + forest green editorial. Premium magazine register for cosmetic dentists.</p>
+      </div>
+      <div style="border: 1px solid var(--gray-200); border-radius: 10px; padding: 32px; background: #FAF6EE;">
+        <div class="mono-sm" style="color: #A6841C; margin-bottom: 16px;">DBA · Personal injury law</div>
+        <h4 class="heading-md" style="margin-bottom: 12px; font-family: 'Instrument Serif', serif; font-weight: 400; color: #0B1B2B;">Sign<em style="color: #C9A24A; font-style: italic; margin: 0 4px;">More</em>Cases</h4>
+        <p class="body-sm" style="color: #1A3148;">Cream + ink + Instrument Serif. Premium institutional editorial for managing partners.</p>
+      </div>
+      <div style="border: 1px solid var(--blue-600); border-radius: 10px; padding: 32px; background: var(--blue-50);">
+        <div class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px;">DBA · Real estate · This brand</div>
+        <h4 class="heading-md" style="margin-bottom: 12px;"><span class="accent-blue">Scale</span> Your Listings</h4>
+        <p class="body-sm" style="color: var(--gray-700);">Blue + navy + canary, Space Grotesk SaaS. HouseCanary-tier register for top-producing listing agents.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 48px; padding: 32px; border-radius: 10px; border-left: 3px solid var(--blue-600); background: var(--blue-50);">
+      <div class="mono-sm" style="color: var(--blue-600); margin-bottom: 16px;">Where to surface the parent</div>
+      <p class="body-md" style="color: var(--gray-700); max-width: 880px;">Footer of every page: "Scale Your Listings is a Cybersphere LLC company." Contracts: "Cybersphere LLC, DBA Scale Your Listings." Founder mentions: "The Cybersphere engineering team also operates 7 Figure Smiles and Sign More Cases."</p>
+      <div class="mono-sm" style="color: var(--claret-600); margin: 24px 0 16px;">Where NOT to surface the parent</div>
+      <p class="body-md" style="color: var(--gray-700); max-width: 880px;">Hero, headlines, subheadlines, CTAs, ad copy, cold email opens, slide 1 of any deck. The DBA carries the marketing surface; the parent carries the contract surface.</p>
+    </div>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

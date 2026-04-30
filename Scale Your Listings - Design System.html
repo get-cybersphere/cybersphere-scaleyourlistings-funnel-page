@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scale Your Listings — Design System</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon-v2.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ==================================================
+     TOKENS — Compass-inspired editorial register
+     ================================================== */
+  :root {
+    /* Paper surfaces */
+    --paper-white: #FFFFFF;
+    --paper-off:   #FAFAFA;
+    --paper-warm:  #F7F5F1;
+
+    /* Ink — 8-stop grayscale */
+    --ink-900: #0A0A0A;
+    --ink-800: #1A1A1A;
+    --ink-600: #4A4A4A;
+    --ink-500: #666666;
+    --ink-400: #888888;
+    --ink-300: #C8C8C8;
+    --ink-200: #E5E5E5;
+    --ink-100: #F0F0F0;
+
+    /* Compass navy — sole chromatic accent */
+    --navy:       #0E1F3D;
+    --navy-hover: #1A2E55;
+    --navy-50:    #F0F2F7;
+
+    /* Semantic */
+    --claret-600: #B23232; /* anti-pattern indicator only, never product surfaces */
+
+    /* Type */
+    --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+    --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono:    'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    --shadow-soft:   0 4px 24px rgba(10, 10, 10, 0.06);
+    --shadow-photo:  0 8px 40px rgba(10, 10, 10, 0.12);
+    --shadow-modal:  0 16px 64px rgba(10, 10, 10, 0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper-white);
+    color: var(--ink-800);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ==================================================
+     PRIMITIVES
+     ================================================== */
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 56px; }
+  .prose { max-width: 640px; }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow-rule {
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--ink-400);
+  }
+  .eyebrow.on-dark { color: rgba(255,255,255,0.7); }
+  .eyebrow.on-dark .eyebrow-rule { background: rgba(255,255,255,0.4); }
+
+  /* Display ramp — Fraunces serif */
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 500; color: var(--ink-900); }
+  .display-xl { font-family: var(--font-display); font-size: 96px; line-height: 1.0; letter-spacing: -0.028em; font-weight: 500; color: var(--ink-900); }
+  .display-lg { font-family: var(--font-display); font-size: 60px; line-height: 1.05; letter-spacing: -0.022em; font-weight: 500; color: var(--ink-900); }
+  .display-md { font-family: var(--font-display); font-size: 44px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 500; color: var(--ink-900); }
+  .display-sm { font-family: var(--font-display); font-size: 32px; line-height: 1.15; letter-spacing: -0.015em; font-weight: 500; color: var(--ink-900); }
+
+  /* Inter sub-display */
+  .heading-lg { font-family: var(--font-sans); font-size: 24px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 600; color: var(--ink-900); }
+  .heading-md { font-family: var(--font-sans); font-size: 20px; line-height: 1.35; letter-spacing: -0.005em; font-weight: 600; color: var(--ink-900); }
+  .heading-sm { font-family: var(--font-sans); font-size: 16px; line-height: 1.4; font-weight: 600; color: var(--ink-900); }
+
+  .body-lg { font-size: 18px; line-height: 1.6; color: var(--ink-800); }
+  .body-md { font-size: 16px; line-height: 1.6; color: var(--ink-800); }
+  .body-sm { font-size: 14px; line-height: 1.5; color: var(--ink-600); }
+
+  .mono-md { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+  .mono-sm { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; }
+  .mono-xs { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .ink-display em, em.serif-italic { font-style: italic; font-family: var(--font-display); font-weight: 500; }
+
+  .accent-navy  { color: var(--navy); }
+  .ink-900-text { color: var(--ink-900); }
+  .ink-600-text { color: var(--ink-600); }
+  .lede { color: var(--ink-600); max-width: 640px; }
+
+  /* ==================================================
+     LAYOUT — sticky nav + sections
+     ================================================== */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink-900);
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+  .nav-brand img { width: 22px; height: 22px; display: block; }
+  .nav-brand .scale { font-style: italic; }
+  .nav-meta { display: flex; gap: 28px; font-family: var(--font-sans); font-size: 13px; color: var(--ink-600); }
+  .nav-meta a { color: var(--ink-600); text-decoration: none; transition: color 200ms var(--ease); }
+  .nav-meta a:hover { color: var(--ink-900); }
+
+  /* ==================================================
+     HERO COVER
+     ================================================== */
+  .hero {
+    position: relative;
+    background: var(--paper-white);
+    border-bottom: 1px solid var(--ink-100);
+    padding: 120px 0 96px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 40% at 100% 0%, rgba(14,31,61,0.04), transparent 60%),
+      radial-gradient(60% 50% at 0% 100%, rgba(247,245,241,0.6), transparent 70%);
+  }
+  .hero-inner { position: relative; max-width: 1280px; margin: 0 auto; padding: 0 56px; }
+  .hero-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid var(--ink-200);
+    padding-bottom: 24px;
+    margin-bottom: 64px;
+    color: var(--ink-600);
+  }
+  .hero-meta .left { display: flex; gap: 32px; align-items: baseline; }
+  .hero h1 {
+    font-size: 110px;
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    color: var(--ink-900);
+    font-weight: 500;
+    max-width: 1100px;
+  }
+  .hero h1 em { font-style: italic; font-family: var(--font-display); font-weight: 500; }
+  .hero-sub {
+    margin-top: 40px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink-600);
+    max-width: 600px;
+  }
+  .hero-foot {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ink-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--ink-500);
+    letter-spacing: 0.02em;
+  }
+  .hero-foot .stamp { font-family: var(--font-mono); }
+
+  /* ==================================================
+     TOC (under hero)
+     ================================================== */
+  .toc {
+    background: var(--paper-off);
+    border-bottom: 1px solid var(--ink-100);
+    padding: 28px 0;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+  .toc-item {
+    text-decoration: none;
+    color: var(--ink-600);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--ink-200);
+    padding-top: 14px;
+    transition: color 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .toc-item .num { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); display: block; margin-bottom: 4px; letter-spacing: 0.06em; }
+  .toc-item:hover { color: var(--ink-900); border-top-color: var(--ink-900); }
+
+  /* ==================================================
+     SECTION SHELLS
+     ================================================== */
+  .section { padding: 120px 0; }
+  .section.white { background: var(--paper-white); }
+  .section.off   { background: var(--paper-off); border-top: 1px solid var(--ink-100); border-bottom: 1px solid var(--ink-100); }
+  .section.warm  { background: var(--paper-warm); border-top: 1px solid var(--ink-100); border-bottom: 1px solid var(--ink-100); }
+  .section.dark  { background: var(--ink-900); color: var(--paper-white); }
+  .section.dark h1, .section.dark h2, .section.dark h3 { color: var(--paper-white); }
+  .section.dark .body-lg, .section.dark .body-md { color: rgba(255,255,255,0.78); }
+  .section.dark .lede { color: rgba(255,255,255,0.7); }
+
+  .section-head { margin-bottom: 64px; }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-400);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .section.dark .section-num { color: rgba(255,255,255,0.5); }
+  .section-head h2 { font-size: 60px; line-height: 1.05; letter-spacing: -0.022em; max-width: 1000px; }
+  .section-head h2 em { font-style: italic; font-family: var(--font-display); }
+  .section-head .lede { margin-top: 24px; font-size: 18px; }
+
+  /* ==================================================
+     01 · COLOR
+     ================================================== */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .swatch {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-white);
+  }
+  .swatch-chip {
+    height: 180px;
+    border-bottom: 1px solid var(--ink-200);
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+  }
+  .swatch-chip .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .swatch-meta {
+    padding: 16px 20px 18px;
+  }
+  .swatch-meta .name { font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); }
+  .swatch-meta .hex { font-family: var(--font-mono); font-size: 12px; color: var(--ink-500); margin-top: 4px; }
+  .swatch-meta .use { font-size: 13px; color: var(--ink-600); margin-top: 10px; line-height: 1.5; }
+
+  .palette-row { margin-bottom: 64px; }
+  .palette-row .row-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid var(--ink-200);
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+  }
+  .palette-row .row-head h3 { font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); letter-spacing: 0.02em; }
+  .palette-row .row-head .meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* Pairing cards */
+  .pairing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .pairing {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 32px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .pairing.on-white { background: var(--paper-white); }
+  .pairing.on-off   { background: var(--paper-off); }
+  .pairing.on-warm  { background: var(--paper-warm); }
+  .pairing.on-ink   { background: var(--ink-900); color: var(--paper-white); }
+  .pairing.on-ink h4, .pairing.on-ink p { color: var(--paper-white); }
+  .pairing h4 { font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink-900); margin-bottom: 16px; }
+  .pairing p { font-size: 14px; color: var(--ink-600); line-height: 1.5; }
+  .pairing-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .pairing.on-ink .pairing-tag { color: rgba(255,255,255,0.5); }
+  .pairing-cta {
+    margin-top: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--navy);
+    color: var(--paper-white);
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    width: fit-content;
+  }
+  .pairing.on-ink .pairing-cta { background: var(--paper-white); color: var(--ink-900); }
+
+  /* Color rules table */
+  .rules {
+    margin-top: 56px;
+    border-top: 1px solid var(--ink-200);
+  }
+  .rule {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .rule .badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-900);
+    padding-top: 4px;
+  }
+  .rule .badge.do  { color: var(--ink-900); }
+  .rule .badge.no  { color: var(--claret-600); }
+  .rule .text { font-size: 15px; color: var(--ink-700, var(--ink-800)); line-height: 1.6; }
+  .rule .text b { font-weight: 600; color: var(--ink-900); }
+
+  /* ==================================================
+     02 · TYPOGRAPHY
+     ================================================== */
+  .type-display {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 56px;
+    background: var(--paper-white);
+    margin-bottom: 32px;
+  }
+  .type-display .specimen {
+    font-family: var(--font-display);
+    font-size: 144px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink-900);
+    font-weight: 500;
+  }
+  .type-display .specimen em { font-style: italic; }
+  .type-display .specimen-meta {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ink-200);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .type-display .specimen-meta b { display: block; color: var(--ink-900); font-weight: 600; margin-top: 4px; text-transform: none; letter-spacing: 0; font-family: var(--font-sans); font-size: 14px; }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    gap: 32px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--ink-100);
+    align-items: baseline;
+  }
+  .type-row:first-child { border-top: 1px solid var(--ink-200); }
+  .type-row .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+  .type-row .meta b { display: block; color: var(--ink-900); font-family: var(--font-sans); font-size: 14px; text-transform: none; letter-spacing: 0; font-weight: 600; margin-bottom: 6px; }
+  .type-row .meta-spec { display: block; }
+  .type-row .sample { color: var(--ink-900); }
+  .type-row .desc { font-size: 13px; color: var(--ink-600); line-height: 1.5; }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+  .stack-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 32px;
+    background: var(--paper-white);
+  }
+  .stack-card .stack-name { font-family: var(--font-display); font-size: 36px; line-height: 1; letter-spacing: -0.02em; color: var(--ink-900); margin-bottom: 16px; font-weight: 500; }
+  .stack-card.fraunces .stack-name { font-style: italic; }
+  .stack-card.inter .stack-name { font-family: var(--font-sans); font-weight: 600; font-style: normal; }
+  .stack-card.mono .stack-name { font-family: var(--font-mono); font-weight: 500; font-style: normal; font-size: 30px; }
+  .stack-card .stack-role { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; display: block; }
+  .stack-card .stack-desc { font-size: 14px; color: var(--ink-600); line-height: 1.55; padding-top: 24px; border-top: 1px solid var(--ink-100); }
+
+  /* ==================================================
+     03 · LOGO
+     ================================================== */
+  .logo-stage {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 96px 56px;
+    background: var(--paper-white);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .logo-wordmark {
+    font-family: var(--font-display);
+    font-size: 88px;
+    font-weight: 500;
+    color: var(--ink-900);
+    letter-spacing: -0.022em;
+    line-height: 1;
+  }
+  .logo-wordmark .scale { font-style: italic; }
+  .logo-wordmark.lg { font-size: 124px; }
+  .logo-wordmark.sm { font-size: 36px; }
+  .logo-wordmark.on-dark { color: var(--paper-white); }
+
+  .logo-stage.on-warm  { background: var(--paper-warm); }
+  .logo-stage.on-off   { background: var(--paper-off); }
+  .logo-stage.on-ink   { background: var(--ink-900); }
+
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 24px;
+  }
+  .logo-meta-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid var(--ink-200);
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mark-stage {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 64px 32px;
+    background: var(--paper-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .mark-S {
+    width: 96px; height: 96px;
+    border: 1px solid var(--ink-200);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 64px;
+    color: var(--ink-900);
+    font-weight: 500;
+  }
+  .mark-S.lg { width: 128px; height: 128px; font-size: 88px; }
+  .mark-S.sm { width: 56px; height: 56px; font-size: 36px; border-radius: 4px; }
+  .mark-S.on-dark { color: var(--paper-white); border-color: rgba(255,255,255,0.25); }
+
+  .dont {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 24px 28px;
+    background: var(--paper-white);
+    position: relative;
+  }
+  .dont::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 49.5%, var(--claret-600) 49.5%, var(--claret-600) 50.5%, transparent 50.5%);
+    opacity: 0.18;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  .dont .label {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--claret-600);
+    margin-bottom: 16px;
+  }
+  .dont .desc { font-size: 13px; color: var(--ink-600); margin-top: 10px; line-height: 1.5; }
+
+  /* ==================================================
+     04 · COMPONENTS
+     ================================================== */
+  .comp-block {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    background: var(--paper-white);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .comp-block .stage {
+    padding: 56px 40px;
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--paper-white);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .comp-block .stage.center { align-items: center; }
+  .comp-block .stage.warm   { background: var(--paper-warm); }
+  .comp-block .stage.off    { background: var(--paper-off); }
+  .comp-block .stage.dark   { background: var(--ink-900); color: var(--paper-white); }
+  .comp-block .meta-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .comp-block .meta-row b { color: var(--ink-900); font-weight: 600; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 4px;
+    padding: 16px 28px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all 200ms var(--ease);
+    cursor: pointer;
+    line-height: 1;
+  }
+  .btn-primary { background: var(--navy); color: var(--paper-white); }
+  .btn-primary:hover { background: var(--navy-hover); }
+  .btn-secondary { background: transparent; color: var(--ink-900); border-color: var(--ink-900); }
+  .btn-secondary:hover { background: var(--ink-900); color: var(--paper-white); }
+  .btn-tertiary {
+    background: transparent; color: var(--ink-900); padding: 8px 0;
+    border-bottom: 1px solid var(--ink-900); border-radius: 0;
+  }
+  .btn-tertiary:hover { color: var(--ink-600); border-bottom-color: var(--ink-600); }
+  .btn-light { background: var(--paper-white); color: var(--ink-900); }
+  .btn-light:hover { background: var(--ink-100); }
+  .btn .arrow { font-size: 16px; line-height: 1; }
+
+  /* Stat */
+  .stat-block {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-white);
+  }
+  .stat {
+    padding: 48px 40px;
+    border-right: 1px solid var(--ink-100);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 500;
+    color: var(--ink-900);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-600);
+    margin-top: 16px;
+    line-height: 1.45;
+  }
+
+  /* Quote */
+  .quote-block {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 56px;
+    background: var(--paper-warm);
+  }
+  .quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: 400;
+    color: var(--ink-900);
+    border-left: 2px solid var(--ink-900);
+    padding-left: 32px;
+    max-width: 720px;
+  }
+  .quote-attr {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-900);
+    margin-top: 24px;
+    padding-left: 34px;
+  }
+  .quote-attr .role { color: var(--ink-600); font-weight: 400; }
+
+  /* Card */
+  .card {
+    background: var(--paper-white);
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 32px;
+  }
+  .card .card-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-500);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .card h4 { font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.2; letter-spacing: -0.015em; color: var(--ink-900); margin-bottom: 12px; }
+  .card p { font-size: 14px; color: var(--ink-600); line-height: 1.55; }
+
+  /* Forms */
+  .form-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 560px; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label { font-family: var(--font-sans); font-size: 12px; color: var(--ink-600); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
+  .field input, .field select, .field textarea {
+    border: 1px solid var(--ink-200);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--ink-900);
+    background: var(--paper-white);
+    transition: border-color 200ms var(--ease), background 200ms var(--ease);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--ink-900);
+    background: var(--navy-50);
+  }
+  .field.full { grid-column: 1 / -1; }
+
+  /* Pill tag */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--navy-50);
+    color: var(--navy);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy); }
+
+  /* Eyebrow demo */
+  .eyebrow-demo {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+
+  /* ==================================================
+     05 · VOICE
+     ================================================== */
+  .voice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .voice-col {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-white);
+  }
+  .voice-col .head {
+    padding: 24px 32px 18px;
+    border-bottom: 1px solid var(--ink-200);
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .voice-col .head .l {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .voice-col.do .head .l   { color: var(--ink-900); }
+  .voice-col.no .head .l   { color: var(--claret-600); }
+  .voice-col .head .r { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); letter-spacing: 0.06em; }
+  .voice-col .body { padding: 24px 32px 32px; }
+  .voice-col .quote-line {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink-900);
+    border-left: 2px solid var(--ink-900);
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  .voice-col.no .quote-line { border-left-color: var(--claret-600); color: var(--ink-500); text-decoration: line-through; text-decoration-color: var(--claret-600); text-decoration-thickness: 1px; }
+  .voice-col .meta { font-size: 13px; color: var(--ink-600); line-height: 1.5; }
+
+  .banned-grid {
+    margin-top: 48px;
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 32px;
+    background: var(--paper-off);
+  }
+  .banned-grid h3 { font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); letter-spacing: 0.02em; margin-bottom: 16px; }
+  .banned-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .banned-list span {
+    padding: 6px 12px;
+    border: 1px solid var(--ink-200);
+    border-radius: 4px;
+    background: var(--paper-white);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-600);
+    text-decoration: line-through;
+    text-decoration-color: var(--claret-600);
+    text-decoration-thickness: 1px;
+  }
+
+  /* ==================================================
+     06 · IMAGERY
+     ================================================== */
+  .imagery-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .imagery-row.flip { grid-template-columns: 1fr 2fr; }
+  .photo-frame {
+    background: var(--paper-warm);
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    border: 1px solid var(--ink-200);
+  }
+  .photo-frame.tall { aspect-ratio: 4 / 5; }
+  .photo-frame.square { aspect-ratio: 1 / 1; }
+  .photo-frame.dark { background: var(--ink-900); }
+
+  /* SVG illustrations replacing real photos */
+  .photo-frame svg { width: 100%; height: 100%; display: block; }
+
+  .imagery-meta {
+    background: var(--paper-white);
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .imagery-meta .tag { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.08em; text-transform: uppercase; }
+  .imagery-meta h4 { font-family: var(--font-display); font-size: 24px; font-weight: 500; line-height: 1.2; margin-top: 12px; letter-spacing: -0.012em; }
+  .imagery-meta p { font-size: 14px; color: var(--ink-600); line-height: 1.55; margin-top: 16px; }
+
+  .alt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .alt {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-white);
+  }
+  .alt .alt-frame { aspect-ratio: 4/3; background: var(--paper-warm); border-bottom: 1px solid var(--ink-200); }
+  .alt .alt-frame.off { background: var(--paper-off); }
+  .alt .alt-meta { padding: 20px 24px 22px; }
+  .alt .alt-meta b { display: block; font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); }
+  .alt .alt-meta span { display: block; font-size: 13px; color: var(--ink-600); margin-top: 6px; line-height: 1.5; }
+
+  /* ==================================================
+     07 · PLAYBOOK
+     ================================================== */
+  .playbook {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    background: var(--paper-white);
+    overflow: hidden;
+  }
+  .play-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 2fr 1fr;
+    gap: 32px;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--ink-100);
+    align-items: baseline;
+  }
+  .play-row:last-child { border-bottom: none; }
+  .play-row .num { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); letter-spacing: 0.06em; text-transform: uppercase; padding-top: 6px; }
+  .play-row .name { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+  .play-row .name em { font-style: italic; }
+  .play-row .what { font-size: 14px; color: var(--ink-600); line-height: 1.55; }
+  .play-row .surface { font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.04em; }
+  .play-row .surface b { color: var(--ink-900); display: block; font-family: var(--font-sans); font-size: 13px; letter-spacing: 0; font-weight: 500; }
+
+  /* ==================================================
+     08 · ANTI-PATTERNS
+     ================================================== */
+  .anti-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .anti {
+    border: 1px solid var(--ink-200);
+    border-radius: 8px;
+    background: var(--paper-white);
+    overflow: hidden;
+  }
+  .anti .head {
+    padding: 24px 32px 18px;
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--paper-off);
+    display: flex; gap: 14px; align-items: center;
+  }
+  .anti .head .glyph {
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--claret-600);
+    color: var(--claret-600);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    border-radius: 50%;
+  }
+  .anti .head .l { font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); }
+  .anti .body { padding: 24px 32px 32px; }
+  .anti .body p { font-size: 14px; color: var(--ink-600); line-height: 1.55; margin-bottom: 12px; }
+  .anti .body p:last-child { margin-bottom: 0; }
+  .anti .body b { color: var(--ink-900); font-weight: 600; }
+
+  /* ==================================================
+     09 · APPLIED
+     ================================================== */
+  #applied { background: var(--paper-white); border-top: 1px solid var(--ink-100); padding: 96px 0 0; }
+  .applied-frame {
+    margin: 56px 0 0;
+    border-top: 1px solid var(--ink-200);
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--paper-white);
+    overflow: hidden;
+    position: relative;
+  }
+  .applied-hero {
+    padding: 96px 0 80px;
+    background: var(--paper-white);
+  }
+  .applied-hero .meta-bar {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid var(--ink-200);
+    padding-bottom: 20px;
+    margin-bottom: 56px;
+    color: var(--ink-500);
+    font-size: 13px;
+  }
+  .applied-hero h1 {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.028em;
+    color: var(--ink-900);
+    max-width: 1100px;
+  }
+  .applied-hero h1 em { font-style: italic; }
+  .applied-hero h1 .second { color: var(--ink-600); display: block; }
+  .applied-hero .lede {
+    margin-top: 40px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink-600);
+    max-width: 600px;
+  }
+  .applied-hero .cta-row {
+    margin-top: 48px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .applied-hero .smallprint {
+    font-size: 13px;
+    color: var(--ink-500);
+  }
+
+  .applied-faq {
+    background: var(--paper-off);
+    padding: 96px 0;
+    border-top: 1px solid var(--ink-100);
+  }
+  .faq {
+    border-top: 1px solid var(--ink-200);
+  }
+  .faq-row {
+    display: grid;
+    grid-template-columns: 64px 1fr 24px;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--ink-200);
+    align-items: baseline;
+  }
+  .faq-row .q { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; color: var(--ink-900); }
+  .faq-row .num { font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); letter-spacing: 0.06em; padding-top: 8px; }
+  .faq-row .a { grid-column: 2; font-size: 15px; color: var(--ink-600); line-height: 1.6; max-width: 720px; margin-top: 12px; display: none; }
+  .faq-row.open .a { display: block; }
+  .faq-row .icon { padding-top: 4px; color: var(--ink-500); font-size: 22px; line-height: 1; }
+
+  .applied-foot {
+    background: var(--ink-900);
+    color: var(--paper-white);
+    padding: 96px 0 48px;
+  }
+  .applied-foot h2 {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+    color: var(--paper-white);
+    max-width: 900px;
+  }
+  .applied-foot h2 em { font-style: italic; }
+  .applied-foot .smallprint { color: rgba(255,255,255,0.7); margin-top: 24px; max-width: 600px; font-family: var(--font-display); font-style: italic; font-size: 18px; line-height: 1.55; }
+  .applied-foot .cta-row { margin-top: 56px; display: flex; align-items: center; gap: 32px; }
+  .applied-foot .foot-grid {
+    margin-top: 96px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.12);
+    display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px;
+  }
+  .applied-foot .foot-grid h4 { color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+  .applied-foot .foot-grid a { color: rgba(255,255,255,0.78); display: block; font-size: 13px; text-decoration: none; padding: 4px 0; }
+  .applied-foot .foot-grid a:hover { color: var(--paper-white); }
+  .applied-foot .foot-brand { font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -0.012em; }
+  .applied-foot .foot-brand em { font-style: italic; }
+  .applied-foot .foot-brand-sub { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 12px; max-width: 280px; line-height: 1.5; }
+  .applied-foot .compliance { margin-top: 32px; color: rgba(255,255,255,0.4); font-size: 11px; line-height: 1.6; max-width: 800px; }
+
+  /* ==================================================
+     10 · PARENT
+     ================================================== */
+  .family-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .family {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--ink-200);
+  }
+  .family .preview {
+    aspect-ratio: 4 / 3;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .family .preview h3 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    line-height: 1.05;
+  }
+  .family .preview .pre-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .family .meta { padding: 20px 24px 22px; background: var(--paper-white); }
+  .family .meta b { display: block; font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900); }
+  .family .meta span { display: block; font-size: 13px; color: var(--ink-600); margin-top: 6px; line-height: 1.5; }
+
+  .family.fs   .preview { background: #FAF8F2; color: #1F3A2E; }
+  .family.fs   .preview h3 { color: #1F3A2E; font-style: italic; }
+  .family.fs   .preview .pre-eyebrow { color: #6F8074; }
+  .family.smc  .preview { background: #F5EFE3; color: #1A1A1A; }
+  .family.smc  .preview h3 { color: #1A1A1A; }
+  .family.smc  .preview .pre-eyebrow { color: #6E5A36; }
+  .family.syl  .preview { background: var(--paper-white); color: var(--ink-900); border-bottom: 1px solid var(--ink-200); position: relative; }
+  .family.syl  .preview h3 { color: var(--ink-900); font-style: italic; }
+  .family.syl  .preview .pre-eyebrow { color: var(--ink-500); }
+  .family.syl::after {
+    content: 'You are here';
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-900);
+    background: var(--paper-white);
+    border: 1px solid var(--ink-900);
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .family.syl .preview { position: relative; }
+
+  /* ==================================================
+     PAGE FOOT
+     ================================================== */
+  .colophon {
+    background: var(--paper-white);
+    border-top: 1px solid var(--ink-200);
+    padding: 56px 0 64px;
+  }
+  .colophon-inner {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 32px;
+    color: var(--ink-500);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  .colophon-inner .stamp { font-family: var(--font-mono); }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .container, .nav-inner, .hero-inner { padding-left: 28px; padding-right: 28px; }
+    .nav-meta { display: none; }
+    .toc-grid { grid-template-columns: repeat(2, 1fr); }
+    .swatch-grid, .pairing-grid, .stack-grid, .alt-grid, .family-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 56px; }
+    .applied-hero h1, .applied-foot h2 { font-size: 48px; }
+    .section-head h2 { font-size: 36px; }
+    .display-xl { font-size: 56px; }
+    .display-lg { font-size: 44px; }
+    .display-md { font-size: 32px; }
+    .type-display .specimen { font-size: 80px; }
+    .type-display .specimen-meta { grid-template-columns: 1fr 1fr; }
+    .stat-block { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(2) { border-right: none; }
+    .stat:nth-child(-n+2) { border-bottom: 1px solid var(--ink-100); }
+    .voice-grid, .anti-grid, .imagery-row, .imagery-row.flip { grid-template-columns: 1fr; }
+    .play-row { grid-template-columns: 1fr; gap: 8px; padding: 20px 24px; }
+    .form-stack { grid-template-columns: 1fr; }
+    .applied-foot .foot-grid { grid-template-columns: 1fr 1fr; }
+    .logo-wordmark { font-size: 56px; }
+    .logo-wordmark.lg { font-size: 72px; }
+    .logo-wordmark.sm { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================== NAV ============================== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#cover" class="nav-brand">
+      <img src="assets/favicon-v2.svg" alt="" />
+      <span><span class="scale">Scale</span> Your Listings</span>
+    </a>
+    <div class="nav-meta">
+      <a href="#color">Color</a>
+      <a href="#type">Type</a>
+      <a href="#logo">Logo</a>
+      <a href="#components">Components</a>
+      <a href="#voice">Voice</a>
+      <a href="#imagery">Imagery</a>
+      <a href="#playbook">Playbook</a>
+      <a href="#applied">Applied</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================== HERO / COVER ============================== -->
+<section class="hero" id="cover">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+
+    <div class="hero-meta">
+      <div class="left">
+        <span class="mono-xs">Cybersphere LLC</span>
+        <span class="mono-xs">DBA · Scale Your Listings</span>
+      </div>
+      <span class="mono-xs">v2.0 · Compass-inspired</span>
+    </div>
+
+    <h1>
+      The design system for an<br/>
+      AI listing engine built for <em>top producers.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Editorial minimalism, photography-led, color-disciplined. Paper, ink, and a single navy accent — applied to a real-estate AI platform that pays only when listings close.
+    </p>
+
+    <div class="hero-foot">
+      <span>Brand Bible v2.0 · April 2026</span>
+      <span class="stamp">SYL-DS-002</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc">
+  <div class="container">
+    <div class="toc-grid">
+      <a href="#color" class="toc-item"><span class="num">01</span>Color</a>
+      <a href="#type" class="toc-item"><span class="num">02</span>Typography</a>
+      <a href="#logo" class="toc-item"><span class="num">03</span>Logo system</a>
+      <a href="#components" class="toc-item"><span class="num">04</span>Components</a>
+      <a href="#voice" class="toc-item"><span class="num">05</span>Voice &amp; tone</a>
+      <a href="#imagery" class="toc-item"><span class="num">06</span>Imagery</a>
+      <a href="#playbook" class="toc-item"><span class="num">07</span>Section playbook</a>
+      <a href="#anti" class="toc-item"><span class="num">08</span>Anti-patterns</a>
+      <a href="#applied" class="toc-item"><span class="num">09</span>Applied example</a>
+      <a href="#parent" class="toc-item"><span class="num">10</span>Parent &amp; family</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== 01 · COLOR ============================== -->
+<section class="section white" id="color">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">01 / Color</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Paper, ink, and one navy accent</div>
+      <h2 style="margin-top: 16px;">Three paper surfaces. Eight ink stops. <em>One chromatic note.</em></h2>
+      <p class="lede" style="margin-top: 16px;">The palette reads editorial print, not Silicon Valley. Default surface is paper-white. Navy is the only chromatic moment on the entire system — reserved for primary CTAs and the rare brand emphasis. The discipline is what makes the aesthetic work.</p>
+    </header>
+
+    <!-- Paper row -->
+    <div class="palette-row">
+      <div class="row-head">
+        <h3>Paper — surfaces</h3>
+        <span class="meta">3 tokens · alternating section rhythm</span>
+      </div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #FFFFFF; border-bottom: 1px solid var(--ink-200);"><span class="label" style="color: var(--ink-500);">paper-white</span></div>
+          <div class="swatch-meta">
+            <div class="name">Paper White</div>
+            <div class="hex">#FFFFFF</div>
+            <p class="use">Primary surface. Default body background. Dominant on every page.</p>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #FAFAFA;"><span class="label" style="color: var(--ink-500);">paper-off</span></div>
+          <div class="swatch-meta">
+            <div class="name">Paper Off</div>
+            <div class="hex">#FAFAFA</div>
+            <p class="use">Secondary surface. Alternates with white for section rhythm. Subtle, almost invisible.</p>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #F7F5F1;"><span class="label" style="color: var(--ink-500);">paper-warm</span></div>
+          <div class="swatch-meta">
+            <div class="name">Paper Warm</div>
+            <div class="hex">#F7F5F1</div>
+            <p class="use">Tertiary cream. Reserved for one editorial moment per page — founder bio, social proof.</p>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #0A0A0A;"><span class="label" style="color: rgba(255,255,255,0.6);">ink-900</span></div>
+          <div class="swatch-meta">
+            <div class="name">Ink 900</div>
+            <div class="hex">#0A0A0A</div>
+            <p class="use">Display headlines and the dark-section surface. Slightly off pure black — warmer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ink row -->
+    <div class="palette-row">
+      <div class="row-head">
+        <h3>Ink — eight grayscale stops</h3>
+        <span class="meta">All text · all hairlines</span>
+      </div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #1A1A1A;"><span class="label" style="color: rgba(255,255,255,0.6);">ink-800</span></div>
+          <div class="swatch-meta"><div class="name">Ink 800</div><div class="hex">#1A1A1A</div><p class="use">Default body. Slightly warmer than pure black.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #4A4A4A;"><span class="label" style="color: rgba(255,255,255,0.6);">ink-600</span></div>
+          <div class="swatch-meta"><div class="name">Ink 600</div><div class="hex">#4A4A4A</div><p class="use">Secondary text, eyebrow, captions, sub-leads.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #888888;"><span class="label" style="color: var(--paper-white);">ink-400</span></div>
+          <div class="swatch-meta"><div class="name">Ink 400</div><div class="hex">#888888</div><p class="use">Disabled UI, very muted timestamps, hairline accents.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #E5E5E5;"><span class="label" style="color: var(--ink-500);">ink-200</span></div>
+          <div class="swatch-meta"><div class="name">Ink 200</div><div class="hex">#E5E5E5</div><p class="use">Standard hairline. Cards, dividers, input borders.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navy row -->
+    <div class="palette-row">
+      <div class="row-head">
+        <h3>Compass navy — sole chromatic accent</h3>
+        <span class="meta">CTAs only · max 3–4 per page</span>
+      </div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #0E1F3D;"><span class="label" style="color: rgba(255,255,255,0.7);">navy</span></div>
+          <div class="swatch-meta"><div class="name">Compass Navy</div><div class="hex">#0E1F3D</div><p class="use">Primary CTA fill. The only color on the system that isn't paper or ink.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #1A2E55;"><span class="label" style="color: rgba(255,255,255,0.7);">navy-hover</span></div>
+          <div class="swatch-meta"><div class="name">Navy Hover</div><div class="hex">#1A2E55</div><p class="use">Hover state on primary CTA. One step lighter.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #F0F2F7;"><span class="label" style="color: var(--ink-500);">navy-50</span></div>
+          <div class="swatch-meta"><div class="name">Navy 50</div><div class="hex">#F0F2F7</div><p class="use">Tinted-navy background. Input focus, pill tags, subtle informational chrome.</p></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: var(--paper-warm); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.06em; text-transform: uppercase;">∅ no other accents</span>
+          </div>
+          <div class="swatch-meta"><div class="name">Everything else</div><div class="hex">—</div><p class="use">No green, red, gold, yellow, or purple. The discipline is the system.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pairings -->
+    <div class="palette-row">
+      <div class="row-head">
+        <h3>Approved pairings</h3>
+        <span class="meta">Section-level surface combos</span>
+      </div>
+      <div class="pairing-grid">
+        <div class="pairing on-white">
+          <div>
+            <span class="pairing-tag">Default</span>
+            <h4>Paper white &amp; ink — the workhorse.</h4>
+            <p>The dominant pairing across every page. Ink-900 display, ink-800 body, ink-200 hairlines. No accent until the CTA.</p>
+          </div>
+          <a class="pairing-cta" href="#">Book the strategy call →</a>
+        </div>
+        <div class="pairing on-warm">
+          <div>
+            <span class="pairing-tag">Editorial moment</span>
+            <h4>Paper warm — the cream interlude.</h4>
+            <p>One section per page maximum. Founder bio, testimonial block, the moment where the page slows down.</p>
+          </div>
+          <a class="pairing-cta" href="#" style="background: transparent; color: var(--ink-900); border: 1px solid var(--ink-900);">Read the story →</a>
+        </div>
+        <div class="pairing on-ink">
+          <div>
+            <span class="pairing-tag">Final CTA only</span>
+            <h4>Ink 900 — the closer.</h4>
+            <p>Used once per page. The dark-section moment that signals decision time. Display in paper-white serif, body in 70% white.</p>
+          </div>
+          <a class="pairing-cta" href="#">Book the strategy call →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rules -->
+    <div class="rules">
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Default every section to <b>paper-white</b>. Alternate to <b>paper-off</b> for rhythm. The almost-invisible difference between #FFF and #FAFAFA is the structural separation.</p>
+      </div>
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Use <b>compass-navy</b> only for primary CTAs and brand emphasis moments. Cap at <b>three to four navy instances per page.</b></p>
+      </div>
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Let <b>photography</b> carry every drop of chromatic interest. The chrome around the photography stays neutral.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Introduce green, red, gold, yellow, orange, or purple anywhere in the product surface. The moment a second accent enters, the editorial register collapses.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Use gradients on any element. No glow effects. No multi-color treatments. Backgrounds are flat color or photography only.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Drop body text below ink-600. Ink-500 and ink-400 exist for muted UI chrome only — disabled states, timestamps, hairline accents.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 02 · TYPOGRAPHY ============================== -->
+<section class="section off" id="type">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">02 / Typography</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Editorial serif · modern sans · data mono</div>
+      <h2 style="margin-top: 16px;"><em>Fraunces.</em> Inter. Geist Mono.</h2>
+      <p class="lede" style="margin-top: 16px;">A high-contrast variable serif for display moments. A modern sans for body and UI. A sharp mono for the rare data label. Fraunces carries the entire editorial-luxury weight; Inter carries everything else.</p>
+    </header>
+
+    <!-- Specimen -->
+    <div class="type-display">
+      <div class="specimen"><em>Scale</em> your listings.</div>
+      <div class="specimen-meta">
+        <div>Family<b>Fraunces</b></div>
+        <div>Weight<b>500 + Italic</b></div>
+        <div>Size · LH<b>144 / 0.95</b></div>
+        <div>Tracking<b>−0.03em</b></div>
+      </div>
+    </div>
+
+    <!-- Stack -->
+    <div class="stack-grid">
+      <div class="stack-card fraunces">
+        <span class="stack-role">Display</span>
+        <div class="stack-name">Fraunces</div>
+        <p class="stack-desc">High-contrast variable serif. Headlines, hero H1, section H2, large stat callouts, the rare emphasized phrase. Italic on emphasized verbs only. Never below 32px.</p>
+      </div>
+      <div class="stack-card inter">
+        <span class="stack-role">Body &amp; UI</span>
+        <div class="stack-name">Inter</div>
+        <p class="stack-desc">Modern sans workhorse. Body, sub-headings, eyebrows, navigation, buttons, all utility text. Weights 400 / 500 / 600 / 700. The default voice of the system.</p>
+      </div>
+      <div class="stack-card mono">
+        <span class="stack-role">Data labels</span>
+        <div class="stack-name">Geist Mono</div>
+        <p class="stack-desc">Used surgically. Inline timestamps, deal IDs, version stamps, dashboard data labels. Never as decoration. Never as primary headline.</p>
+      </div>
+    </div>
+
+    <!-- Type ramp -->
+    <div style="margin-top: 80px;">
+      <div class="row-head" style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--ink-200); padding-bottom: 14px; margin-bottom: 0;">
+        <h3 style="font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900);">Type scale</h3>
+        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-400); letter-spacing: 0.06em; text-transform: uppercase;">13 tokens · 8px base</span>
+      </div>
+
+      <div class="type-row">
+        <div class="meta"><b>display-xl</b><span class="meta-spec">Fraunces 500 · 80 / 1.0 · −0.025em</span></div>
+        <div class="sample" style="font-family: var(--font-display); font-weight: 500; font-size: 80px; line-height: 1.0; letter-spacing: -0.025em; color: var(--ink-900);">Scale.</div>
+        <div class="desc">Hero H1. Used once per page.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>display-lg</b><span class="meta-spec">Fraunces 500 · 60 / 1.05 · −0.022em</span></div>
+        <div class="sample" style="font-family: var(--font-display); font-weight: 500; font-size: 60px; line-height: 1.05; letter-spacing: -0.022em; color: var(--ink-900);">Built for top producers.</div>
+        <div class="desc">Section H2 on warm-traffic surfaces. Final CTA headline.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>display-md</b><span class="meta-spec">Fraunces 500 · 44 / 1.1 · −0.02em</span></div>
+        <div class="sample" style="font-family: var(--font-display); font-weight: 500; font-size: 44px; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink-900);">Why this team is different.</div>
+        <div class="desc">Body section H2. Default headline rank for content sections.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>display-sm</b><span class="meta-spec">Fraunces 500 · 32 / 1.15 · −0.015em</span></div>
+        <div class="sample" style="font-family: var(--font-display); font-weight: 500; font-size: 32px; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink-900);">Pay only when listings close.</div>
+        <div class="desc">Card headline. Sub-section H3. Floor for Fraunces — never below this.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>eyebrow</b><span class="meta-spec">Inter 500 UPPER · 12 · 0.18em</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 500; font-size: 12px; line-height: 1.4; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-600);">For listing agents</div>
+        <div class="desc">Section kicker. Always ink-600. Looser tracking signals editorial register.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>heading-lg</b><span class="meta-spec">Inter 600 · 24 / 1.3</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 600; font-size: 24px; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-900);">Sub-10-second contact on every inquiry</div>
+        <div class="desc">Inter sub-headline. Sub-section H3. The tier where prose-density takes over from display.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>heading-md</b><span class="meta-spec">Inter 600 · 20 / 1.35</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 600; font-size: 20px; line-height: 1.35; color: var(--ink-900);">Listing pipeline audit, on the call.</div>
+        <div class="desc">FAQ question. Card lead-in. Footer column heading.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>body-lg</b><span class="meta-spec">Inter 400 · 18 / 1.6</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.6; color: var(--ink-800); max-width: 480px;">Lead vendors sell shared lead lists. We route booked listing appointments — pre-qualified, on your calendar.</div>
+        <div class="desc">Section sub-lead. Hero supporting copy. Max 60ch.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>body-md</b><span class="meta-spec">Inter 400 · 16 / 1.6</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 1.6; color: var(--ink-800); max-width: 480px;">The AI books FSBO and expired appointments before you've pulled your morning list. The clock starts the second the inquiry lands.</div>
+        <div class="desc">Default body. Long-form prose. Default editorial column ≤ 65ch.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>body-sm</b><span class="meta-spec">Inter 400 · 14 / 1.5</span></div>
+        <div class="sample" style="font-family: var(--font-sans); font-weight: 400; font-size: 14px; line-height: 1.5; color: var(--ink-600); max-width: 460px;">Captions, footer copy, attribution lines. Always ink-600 — never lighter.</div>
+        <div class="desc">Auxiliary text, captions, attribution.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>mono-md</b><span class="meta-spec">Geist Mono 500 · 14 / 1.4</span></div>
+        <div class="sample" style="font-family: var(--font-mono); font-weight: 500; font-size: 14px; line-height: 1.4; color: var(--ink-900);">$72,000 · 10s · 12-day DOM</div>
+        <div class="desc">Inline data labels, timestamps, system badges.</div>
+      </div>
+      <div class="type-row">
+        <div class="meta"><b>mono-xs</b><span class="meta-spec">Geist Mono 500 UPPER · 11 · 0.06em</span></div>
+        <div class="sample" style="font-family: var(--font-mono); font-weight: 500; font-size: 11px; line-height: 1.4; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-500);">SYL-DS-002 · v2.0 · 04.26</div>
+        <div class="desc">Section numbers, version stamps, the chrome.</div>
+      </div>
+    </div>
+
+    <!-- Rules -->
+    <div class="rules">
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Italicize <b>one verb per headline</b> in Fraunces italic. The italic is the brand mnemonic. Use it sparingly — it stops working when overused.</p>
+      </div>
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Use <b>Fraunces serif</b> for stat callouts — numbers as typography, not as data. Geist Mono is for inline labels, not big number moments.</p>
+      </div>
+      <div class="rule">
+        <span class="badge do">Do</span>
+        <p class="text">Keep body lines under <b>65 characters wide</b>. Editorial register favors narrow columns.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Italicize Inter body copy. Italic is reserved for Fraunces serif moments only.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Use Fraunces below 32px. The serif loses its display character at smaller sizes.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Run a headline past <b>twelve words</b>. If it needs more, it isn't a headline.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 03 · LOGO ============================== -->
+<section class="section white" id="logo">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">03 / Logo system</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Wordmark · mark · favicon</div>
+      <h2 style="margin-top: 16px;">The italic <em>"Scale"</em> carries the entire brand mnemonic.</h2>
+      <p class="lede" style="margin-top: 16px;">No chromatic moment in the logo. No needle. No house, no roof, no key. A Fraunces wordmark with one italicized verb does the entire job. The italic serif is the recognition surface.</p>
+    </header>
+
+    <!-- Primary stage -->
+    <div class="logo-stage">
+      <div class="logo-wordmark lg"><span class="scale">Scale</span> Your Listings</div>
+      <div class="logo-meta-row">
+        <span>Primary wordmark</span>
+        <span>Fraunces 500 / italic 500 · ink-900 · −0.022em</span>
+      </div>
+    </div>
+
+    <!-- Variants grid -->
+    <div class="logo-grid">
+      <div class="logo-stage on-warm" style="padding: 56px 32px;">
+        <div class="logo-wordmark"><span class="scale">Scale</span> Your Listings</div>
+        <div class="logo-meta-row" style="margin-top: 24px;">
+          <span>On paper-warm</span>
+          <span>ink-900</span>
+        </div>
+      </div>
+      <div class="logo-stage on-ink" style="padding: 56px 32px;">
+        <div class="logo-wordmark on-dark"><span class="scale">Scale</span> Your Listings</div>
+        <div class="logo-meta-row" style="margin-top: 24px; color: rgba(255,255,255,0.5); border-top-color: rgba(255,255,255,0.15);">
+          <span>On ink-900</span>
+          <span>paper-white</span>
+        </div>
+      </div>
+      <div class="logo-stage on-off" style="padding: 56px 32px;">
+        <div class="logo-wordmark sm"><span class="scale">Scale</span> Your Listings</div>
+        <div class="logo-meta-row" style="margin-top: 24px;">
+          <span>Nav-bar size</span>
+          <span>36px · −0.022em</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mark -->
+    <div style="margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+      <div class="mark-stage">
+        <div class="mark-S lg"><em>S</em></div>
+      </div>
+      <div class="mark-stage" style="background: var(--paper-warm);">
+        <div class="mark-S"><em>S</em></div>
+      </div>
+      <div class="mark-stage" style="background: var(--ink-900);">
+        <div class="mark-S on-dark"><em>S</em></div>
+      </div>
+    </div>
+    <div class="logo-meta-row" style="margin-top: 0; border-top: 1px solid var(--ink-200); margin-top: 24px;">
+      <span>Ascending S — minimalist mark</span>
+      <span>Fraunces italic · 1px ink-200 frame · 4px radius at small sizes</span>
+    </div>
+
+    <!-- Don'ts -->
+    <div style="margin-top: 80px;">
+      <div class="row-head" style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--ink-200); padding-bottom: 14px; margin-bottom: 24px;">
+        <h3 style="font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900);">Logo don'ts</h3>
+        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.06em; text-transform: uppercase;">Hard nos</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div class="dont">
+          <div class="label">No compass needle</div>
+          <p class="desc">No directional or navigational icon. Compass owns that visual territory and we deliberately do not occupy it.</p>
+        </div>
+        <div class="dont">
+          <div class="label">No real-estate clichés</div>
+          <p class="desc">No house icons, keys, roofs, "for sale" signs. The aesthetic is editorial, not industry-templated.</p>
+        </div>
+        <div class="dont">
+          <div class="label">No color in the logo</div>
+          <p class="desc">No navy, no any chromatic accent inside the mark or wordmark. Pure ink on paper. Always.</p>
+        </div>
+        <div class="dont">
+          <div class="label">No animation</div>
+          <p class="desc">No hover spin, no kinetic effects. The wordmark sits still and says what it says.</p>
+        </div>
+        <div class="dont">
+          <div class="label">No drop shadow</div>
+          <p class="desc">Flat type on flat surface. Editorial register has no place for shadow chrome.</p>
+        </div>
+        <div class="dont">
+          <div class="label">No tightening past −0.022em</div>
+          <p class="desc">The Fraunces italic loses readability when over-tracked. Stay loose.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 04 · COMPONENTS ============================== -->
+<section class="section off" id="components">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">04 / Components</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Buttons · stats · quotes · cards · forms</div>
+      <h2 style="margin-top: 16px;">4px button radius. 8px card radius. <em>One CTA per surface.</em></h2>
+      <p class="lede" style="margin-top: 16px;">Editorial register favors minimal rounding and minimal chrome. Borders carry the structure. Shadows show up sparingly — usually never. Sentence-case button copy throughout. The discipline keeps the surface quiet so the photography and the headline can carry the moment.</p>
+    </header>
+
+    <!-- Buttons -->
+    <div class="comp-block">
+      <div class="stage" style="flex-direction: row; flex-wrap: wrap; gap: 16px; align-items: center;">
+        <a class="btn btn-primary" href="#">Book the strategy call <span class="arrow">→</span></a>
+        <a class="btn btn-secondary" href="#">See the AI work a live FSBO call</a>
+        <a class="btn btn-tertiary" href="#">Read the engineering memo →</a>
+      </div>
+      <div class="meta-row">
+        <span><b>Buttons</b> · 4px radius · sentence-case · Inter 500 · 15px</span>
+        <span>compass-navy · ink-900 outline · ink-900 underline</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="comp-block">
+      <div class="stat-block" style="border: none; border-radius: 0;">
+        <div class="stat">
+          <div class="stat-num">10s</div>
+          <div class="stat-label">First contact on every new seller inquiry.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">$72,000</div>
+          <div class="stat-label">Avg. listing-side commission, live client roster.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">94%</div>
+          <div class="stat-label">Show-up rate on AI-booked appointments.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">12-day<span style="font-size: 0.5em;"> </span>DOM</div>
+          <div class="stat-label">vs. metro average of 28 days on market.</div>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span><b>Stat callout</b> · Fraunces 500 · 64 / 1.0 · −0.02em</span>
+        <span>label · Inter 400 · 13px · ink-600</span>
+      </div>
+    </div>
+
+    <!-- Quote -->
+    <div class="comp-block">
+      <div class="stage warm">
+        <div style="max-width: 720px;">
+          <div class="quote">I'd been pitched by every CRM in the category. This is the only one that actually books listing appointments while I'm on showings.</div>
+          <div class="quote-attr">Andres Restrepo &nbsp;<span class="role">Listing Agent · Compass · SF Bay Area</span></div>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span><b>Quote</b> · Fraunces italic · 28 / 1.4 · ink-900</span>
+        <span>2px ink-900 left rule · paper-warm surface</span>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="comp-block">
+      <div class="stage off" style="flex-direction: row; gap: 24px; align-items: stretch;">
+        <div class="card" style="flex: 1;">
+          <span class="card-tag">01 · Attract</span>
+          <h4>The clock starts.</h4>
+          <p>FSBO ad, expired listing, Zestimate inquiry, down-the-street request, probate. The pipeline begins the second the form fires.</p>
+        </div>
+        <div class="card" style="flex: 1;">
+          <span class="card-tag">02 · Qualify</span>
+          <h4>Sub-10-second contact.</h4>
+          <p>Voice AI calls and verifies seller motivation, timeline, and price expectations. Routes only retainable matters to your calendar.</p>
+        </div>
+        <div class="card" style="flex: 1;">
+          <span class="card-tag">03 · Win</span>
+          <h4>Listing on calendar.</h4>
+          <p>Pre-qualified seller meeting on your calendar — average click-to-booked across the live roster. You walk into the listing presentation already in front.</p>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span><b>Card</b> · 8px radius · 32px padding · 1px ink-200 border · no shadow</span>
+        <span>tag · Geist Mono · 11px · ink-500</span>
+      </div>
+    </div>
+
+    <!-- Forms -->
+    <div class="comp-block">
+      <div class="stage">
+        <form class="form-stack" onsubmit="return false;">
+          <div class="field">
+            <label for="f-first">First name</label>
+            <input id="f-first" type="text" placeholder="Andres" />
+          </div>
+          <div class="field">
+            <label for="f-last">Last name</label>
+            <input id="f-last" type="text" placeholder="Restrepo" />
+          </div>
+          <div class="field full">
+            <label for="f-mls">Brokerage &amp; MSA</label>
+            <input id="f-mls" type="text" placeholder="Compass · SF Bay Area" />
+          </div>
+          <div class="field full">
+            <label for="f-gci">Last 12mo GCI</label>
+            <select id="f-gci">
+              <option>$400K – $750K</option>
+              <option>$750K – $1.5M</option>
+              <option>$1.5M – $5M</option>
+              <option>$5M+</option>
+            </select>
+          </div>
+          <div class="field full" style="margin-top: 8px;">
+            <button class="btn btn-primary" type="submit" style="width: fit-content;">Book the strategy call <span class="arrow">→</span></button>
+          </div>
+        </form>
+      </div>
+      <div class="meta-row">
+        <span><b>Form</b> · 1px ink-200 borders · 4px radius · navy-50 focus background</span>
+        <span>label · Inter 500 UPPER · 12px · 0.06em</span>
+      </div>
+    </div>
+
+    <!-- Eyebrows + pills -->
+    <div class="comp-block">
+      <div class="stage" style="gap: 32px;">
+        <div class="eyebrow-demo">
+          <div class="eyebrow"><span class="eyebrow-rule"></span>For listing agents</div>
+          <div class="eyebrow"><span class="eyebrow-rule"></span>01 / Why this team</div>
+          <div class="eyebrow"><span class="eyebrow-rule"></span>Pay only when listings close</div>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; padding-top: 8px;">
+          <span class="pill"><span class="dot"></span>Live demo</span>
+          <span class="pill">25 minutes</span>
+          <span class="pill">No pitch</span>
+          <span class="pill">In-MSA</span>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span><b>Eyebrow + pill</b> · structural chrome, never chromatic accent</span>
+        <span>eyebrow ink-600 · pill navy-50 / navy</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 05 · VOICE ============================== -->
+<section class="section white" id="voice">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">05 / Voice &amp; tone</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Engineer-not-realtor · GCI register</div>
+      <h2 style="margin-top: 16px;">Sound like the team that <em>built</em> the thing — not the team that sells it.</h2>
+      <p class="lede" style="margin-top: 16px;">The visual register is editorial. The voice register is technical-engineering. The intentional contrast — visual luxury plus voice precision — is the brand's most distinctive textural choice. Numbers, not adjectives. Plain English, never funnel-speak.</p>
+    </header>
+
+    <!-- Voice columns -->
+    <div class="voice-grid">
+      <div class="voice-col do">
+        <div class="head"><span class="l">Sounds like us</span><span class="r">Voice · do</span></div>
+        <div class="body">
+          <div class="quote-line">"Sub-10-second contact on every FSBO, expired, and Zestimate inquiry. Pay only when listings close."</div>
+          <p class="meta">Specific. Verbs of action. Numbers carry the weight. The offer is in the sentence, not in a separate "value-prop" bullet.</p>
+        </div>
+      </div>
+      <div class="voice-col no">
+        <div class="head"><span class="l">Doesn't sound like us</span><span class="r">Voice · don't</span></div>
+        <div class="body">
+          <div class="quote-line">"Unlock the power of revolutionary AI to transform your listing pipeline and 10X your business."</div>
+          <p class="meta">Banned-words bingo. No specifics. No verb that means anything. Reads as a templated funnel, exactly the surface we counter-position against.</p>
+        </div>
+      </div>
+
+      <div class="voice-col do">
+        <div class="head"><span class="l">Sounds like us</span><span class="r">Headline · do</span></div>
+        <div class="body">
+          <div class="quote-line">"Why this team is different — every lead vendor before us was too slow by design."</div>
+          <p class="meta">Engineer's framing. Names the structural problem. The conclusion is the headline.</p>
+        </div>
+      </div>
+      <div class="voice-col no">
+        <div class="head"><span class="l">Doesn't sound like us</span><span class="r">Headline · don't</span></div>
+        <div class="body">
+          <div class="quote-line">"Tired of cold leads? It's time to build the dream business you deserve."</div>
+          <p class="meta">Motivational-poster register. "Cold leads" used as adjective. No proof. The reader is being talked at, not addressed.</p>
+        </div>
+      </div>
+
+      <div class="voice-col do">
+        <div class="head"><span class="l">Sounds like us</span><span class="r">Caption · do</span></div>
+        <div class="body">
+          <div class="quote-line">"Closed a $4.2M Pacific Heights listing from a 6:47 AM Zillow inquiry the AI took while I was on showings."</div>
+          <p class="meta">A real moment with a real number. Time stamps and price stamps. The reader can verify the texture.</p>
+        </div>
+      </div>
+      <div class="voice-col no">
+        <div class="head"><span class="l">Doesn't sound like us</span><span class="r">Caption · don't</span></div>
+        <div class="body">
+          <div class="quote-line">"Our cutting-edge AI helps top agents leverage their pipelines for unprecedented growth."</div>
+          <p class="meta">Three banned words in one sentence. Zero verifiable detail. Reads as the front page of a CRM landing page from 2019.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banned words -->
+    <div class="banned-grid">
+      <h3>Banned words — never appear on a Scale Your Listings surface.</h3>
+      <div class="banned-list">
+        <span>leverage</span>
+        <span>synergize</span>
+        <span>world-class</span>
+        <span>best-in-class</span>
+        <span>cutting-edge</span>
+        <span>innovative</span>
+        <span>transform</span>
+        <span>unlock</span>
+        <span>harness</span>
+        <span>empower</span>
+        <span>revolutionary</span>
+        <span>abundance</span>
+        <span>mindset</span>
+        <span>10X</span>
+        <span>build relationships</span>
+        <span>high-touch</span>
+        <span>white glove</span>
+        <span>concierge</span>
+        <span>game-changer</span>
+        <span>disruptive</span>
+      </div>
+    </div>
+
+    <!-- Required vocabulary -->
+    <div class="banned-grid" style="background: var(--paper-warm); margin-top: 24px;">
+      <h3>Required vocabulary — the listing-agent register.</h3>
+      <div class="banned-list">
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">GCI</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">MLS</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">DOM</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">FSBO</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Expired</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Probate</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Listing-side</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Pre-qualified</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Sub-10-second</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Engineered</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Pay only when</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Routed</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Pipeline</span>
+        <span style="text-decoration: none; color: var(--ink-900); font-weight: 500; background: var(--paper-white);">Calendar</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 06 · IMAGERY ============================== -->
+<section class="section warm" id="imagery">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">06 / Imagery</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Architectural · editorial · color-rich</div>
+      <h2 style="margin-top: 16px;">Photography is the only color-rich element. <em>Everything else is paper.</em></h2>
+      <p class="lede" style="margin-top: 16px;">Real listings. Real interiors. Real agents on showings. Editorial color, full resolution, natural light. Hero images go full-bleed. The chrome around the photography stays neutral so the photograph carries the visual interest. No filters, no duotones, no AI-generated property art.</p>
+    </header>
+
+    <!-- Imagery row 1 — hero shot -->
+    <div class="imagery-row">
+      <div class="photo-frame">
+        <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#E8DDC8"/>
+              <stop offset="1" stop-color="#D4C2A0"/>
+            </linearGradient>
+            <linearGradient id="house" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3A3A3A"/>
+              <stop offset="1" stop-color="#1A1A1A"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="450" fill="url(#sky)"/>
+          <!-- Distant landscape -->
+          <rect x="0" y="280" width="800" height="170" fill="#9A9682"/>
+          <rect x="0" y="320" width="800" height="130" fill="#7A7866"/>
+          <!-- House body -->
+          <rect x="180" y="180" width="440" height="200" fill="url(#house)"/>
+          <polygon points="180,180 400,90 620,180" fill="#0F0F0F"/>
+          <!-- Glass walls -->
+          <rect x="220" y="220" width="100" height="140" fill="#C8D4D8" opacity="0.9"/>
+          <rect x="340" y="220" width="100" height="140" fill="#B8C8CC" opacity="0.85"/>
+          <rect x="460" y="220" width="100" height="140" fill="#C8D4D8" opacity="0.9"/>
+          <!-- Pool -->
+          <rect x="40" y="380" width="720" height="40" fill="#5A6A78"/>
+          <!-- Vertical mullions -->
+          <rect x="320" y="220" width="2" height="140" fill="#2A2A2A"/>
+          <rect x="440" y="220" width="2" height="140" fill="#2A2A2A"/>
+          <rect x="220" y="220" width="340" height="2" fill="#2A2A2A"/>
+          <rect x="220" y="358" width="340" height="2" fill="#2A2A2A"/>
+        </svg>
+      </div>
+      <div class="imagery-meta">
+        <div>
+          <span class="tag">01 · Architectural hero</span>
+          <h4>The 16:9 full-bleed listing exterior.</h4>
+          <p>Golden-hour modernist or warm-light brownstone. Used at hero scale, no padding, no overlay treatment. The photograph is the hero — not text laid on top of an image.</p>
+        </div>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ink-200); font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; text-transform: uppercase;">16:9 · No filter · Natural color</div>
+      </div>
+    </div>
+
+    <!-- Row 2 — interior + lifestyle -->
+    <div class="imagery-row flip">
+      <div class="imagery-meta">
+        <div>
+          <span class="tag">02 · Editorial interior</span>
+          <h4>Detail shots from real listings.</h4>
+          <p>4:3 or 3:2. Kitchen islands, library walls, the front-door moment. The kind of image a top-producer's listing video would open on. Always with consent, never AI-generated.</p>
+        </div>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ink-200); font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; text-transform: uppercase;">4:3 · Natural light · Real listings</div>
+      </div>
+      <div class="photo-frame" style="aspect-ratio: 4 / 3;">
+        <svg viewBox="0 0 600 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect width="600" height="450" fill="#E8DCC2"/>
+          <!-- Wall + wainscoting -->
+          <rect x="0" y="0" width="600" height="280" fill="#F0E6D2"/>
+          <rect x="0" y="280" width="600" height="170" fill="#D4C4A4"/>
+          <line x1="0" y1="280" x2="600" y2="280" stroke="#A89880" stroke-width="2"/>
+          <!-- Window -->
+          <rect x="60" y="60" width="200" height="200" fill="#F8F4EA" stroke="#3A3A3A" stroke-width="3"/>
+          <line x1="160" y1="60" x2="160" y2="260" stroke="#3A3A3A" stroke-width="2"/>
+          <line x1="60" y1="160" x2="260" y2="160" stroke="#3A3A3A" stroke-width="2"/>
+          <!-- Console -->
+          <rect x="320" y="290" width="220" height="80" fill="#3A2A1A"/>
+          <line x1="320" y1="320" x2="540" y2="320" stroke="#1A0F00" stroke-width="1"/>
+          <!-- Lamp -->
+          <rect x="380" y="200" width="14" height="90" fill="#2A2A2A"/>
+          <ellipse cx="387" cy="200" rx="50" ry="20" fill="#E8C268" opacity="0.85"/>
+          <ellipse cx="387" cy="200" rx="50" ry="20" fill="none" stroke="#A88848" stroke-width="1"/>
+          <!-- Vase -->
+          <ellipse cx="460" cy="280" rx="22" ry="6" fill="#1A1A1A"/>
+          <path d="M438 280 Q438 230 460 230 Q482 230 482 280 Z" fill="#2A2A2A"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Row 3 — typographic alternative -->
+    <div class="imagery-row">
+      <div class="photo-frame" style="background: var(--paper-white); border: 1px solid var(--ink-200); display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center; padding: 32px;">
+          <div style="font-family: var(--font-display); font-style: italic; font-size: 144px; line-height: 1; color: var(--ink-900); font-weight: 500;">Scale.</div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 24px;">Typography as image · Fraunces 144pt</div>
+        </div>
+      </div>
+      <div class="imagery-meta">
+        <div>
+          <span class="tag">03 · When photography isn't available</span>
+          <h4>Typography-as-image carries the hero.</h4>
+          <p>One Fraunces word at 144pt+ does the visual work that a generic stock photo cannot. Always preferable to a stock-photo agent in a suit in front of a house.</p>
+        </div>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ink-200); font-family: var(--font-mono); font-size: 11px; color: var(--ink-500); letter-spacing: 0.06em; text-transform: uppercase;">Fallback · Display serif · No-image hero</div>
+      </div>
+    </div>
+
+    <!-- Never-use grid -->
+    <div style="margin-top: 80px;">
+      <div class="row-head" style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--ink-200); padding-bottom: 14px; margin-bottom: 24px;">
+        <h3 style="font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--ink-900);">Never use</h3>
+        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.06em; text-transform: uppercase;">Imagery don'ts</span>
+      </div>
+      <div class="alt-grid">
+        <div class="alt">
+          <div class="alt-frame" style="background: linear-gradient(135deg, #CFC4A8 0%, #B6A988 100%); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--claret-600); background: var(--paper-white);">∅ Stock agent</span>
+          </div>
+          <div class="alt-meta">
+            <b>Agents in suits in front of homes.</b>
+            <span>The category cliché. Reads as bought from a stock library. We do not use this image, ever.</span>
+          </div>
+        </div>
+        <div class="alt">
+          <div class="alt-frame" style="background: linear-gradient(135deg, #D8C8AA 0%, #B8A580 100%); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--claret-600); background: var(--paper-white);">∅ For-sale sign</span>
+          </div>
+          <div class="alt-meta">
+            <b>"For Sale" sign on a lawn.</b>
+            <span>Templated funnel signal. The buyer's MLS dashboard already shows them sign photos all day. We are not that.</span>
+          </div>
+        </div>
+        <div class="alt">
+          <div class="alt-frame" style="background: linear-gradient(135deg, #C8D8E8 0%, #98B0C8 100%); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--claret-600); letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--claret-600); background: var(--paper-white);">∅ AI-rendered home</span>
+          </div>
+          <div class="alt-meta">
+            <b>AI-generated property imagery.</b>
+            <span>Reads as fake within seconds. The buyer is a top-producer who looks at MLS photos all day — they spot synthetic before the page finishes loading.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 07 · PLAYBOOK ============================== -->
+<section class="section white" id="playbook">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">07 / Section playbook</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Landing-page composition order</div>
+      <h2 style="margin-top: 16px;">Adapt the structure. <em>Avoid the templated tells.</em></h2>
+      <p class="lede" style="margin-top: 16px;">The proven section sequence — alternating paper-white and paper-off, one warm interlude, one dark closer — applied to a real-estate AI landing page. Each section's surface, headline rank, and approved copy stack are spelled out below. Mirror this when composing new pages.</p>
+    </header>
+
+    <div class="playbook">
+      <div class="play-row">
+        <span class="num">00</span>
+        <div class="name"><em>Hero.</em></div>
+        <div class="what">Full-width display headline with one italicized verb. Sub in Fraunces italic 22px. Single primary CTA. One supporting line of mono-xs metadata at the bottom edge.</div>
+        <div class="surface"><b>paper-white</b>120 / 96 padding</div>
+      </div>
+      <div class="play-row">
+        <span class="num">01</span>
+        <div class="name">Why this team is different.</div>
+        <div class="what">Three-column timestamp pattern: 0:00 / +0:08 / +2:30. Headline display-md. Card surface paper-white on paper-off section. Closing line in body-lg ink-800.</div>
+        <div class="surface"><b>paper-off</b>120 padding</div>
+      </div>
+      <div class="play-row">
+        <span class="num">02</span>
+        <div class="name">Stat callouts.</div>
+        <div class="what">4-up Fraunces 60px serif numbers in a single bordered block. Geist-Mono inline labels disallowed at this rank — Fraunces only. Labels in Inter 13px ink-600.</div>
+        <div class="surface"><b>paper-white</b>120 padding</div>
+      </div>
+      <div class="play-row">
+        <span class="num">03</span>
+        <div class="name">Social proof — <em>three testimonials.</em></div>
+        <div class="what">Single warm interlude per page. Cards sit on paper-warm surface. Quote body in Inter 400 ink-800 (not italic — italic reserved for the quote-block component). Fraunces italic only in the section H2.</div>
+        <div class="surface"><b>paper-warm</b>120 padding · 1× per page</div>
+      </div>
+      <div class="play-row">
+        <span class="num">04</span>
+        <div class="name">Proof from the inbox.</div>
+        <div class="what">Two-column screenshot grid. Unedited email + iMessage success captures. Card surface paper-white, 1px ink-200 border, 8px radius, no shadow.</div>
+        <div class="surface"><b>paper-off</b>120 padding</div>
+      </div>
+      <div class="play-row">
+        <span class="num">05</span>
+        <div class="name">FAQ — <em>six questions, plain answers.</em></div>
+        <div class="what">Question list with mono-numbered prefix. Question in Fraunces 22px. Answer in Inter 400 16px ink-600, 720px max width, 1.6 leading.</div>
+        <div class="surface"><b>paper-white</b>120 padding</div>
+      </div>
+      <div class="play-row">
+        <span class="num">06</span>
+        <div class="name">Final CTA — <em>pay only when listings close.</em></div>
+        <div class="what">Dark-section closer. Display-lg in paper-white. Sub in Fraunces italic 18px at 70% white. Single CTA in paper-white-on-ink-900 inverted style.</div>
+        <div class="surface"><b>ink-900 dark</b>1× per page · last block</div>
+      </div>
+      <div class="play-row">
+        <span class="num">07</span>
+        <div class="name">Footer.</div>
+        <div class="what">4-column link grid. Equal Housing Opportunity disclosure at the bottom in mono-xs. No social-media row above the disclaimer.</div>
+        <div class="surface"><b>ink-900 dark</b>continuation of CTA block</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 08 · ANTI-PATTERNS ============================== -->
+<section class="section off" id="anti">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">08 / Anti-patterns</span>
+      <div class="eyebrow" style="color: var(--claret-600);"><span class="eyebrow-rule" style="background: var(--claret-600);"></span>What we are killing</div>
+      <h2 style="margin-top: 16px;">If unsure, default to <em>Compass.</em> Not GoHighLevel.</h2>
+      <p class="lede" style="margin-top: 16px;">Whenever a layout decision is unclear, choose whichever option looks more like a Compass listing page and less like a templated lead-gen funnel. The current SYL landing page already commits this pattern in two places — both flagged below for the next revision.</p>
+    </header>
+
+    <div class="anti-grid">
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">All-caps screaming CTAs</span></div>
+        <div class="body">
+          <p><b>Bad:</b> "BOOK THE STRATEGY CALL → " · "SEE IF YOU QUALIFY TO WORK WITH US"</p>
+          <p><b>Good:</b> "Book the strategy call →" — sentence-case, Inter 500, 15px. Compass uses sentence-case throughout. The all-caps button reads as GoHighLevel out of the box.</p>
+        </div>
+      </div>
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">Multi-color treatments</span></div>
+        <div class="body">
+          <p><b>Bad:</b> Gold accent + canary highlight + sage section + claret error chrome on a single page.</p>
+          <p><b>Good:</b> Paper, ink, navy. The discipline is the system. The moment a second accent enters, the editorial register collapses and the buyer pattern-matches us to "another templated funnel."</p>
+        </div>
+      </div>
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">Gradient backgrounds</span></div>
+        <div class="body">
+          <p><b>Bad:</b> Hero with a radial-gradient wash, soft-glow CTAs, pill-tag chrome with tinted gradients.</p>
+          <p><b>Good:</b> Flat color or photography. Compass uses zero gradients on their site. We follow.</p>
+        </div>
+      </div>
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">Emoji + 👇 funnel arrows</span></div>
+        <div class="body">
+          <p><b>Bad:</b> 👇 pointing at the CTA. 🚀 next to a stat. 🎉 in a success story.</p>
+          <p><b>Good:</b> No emoji anywhere in body copy. The visual register is editorial print, not a TikTok caption.</p>
+        </div>
+      </div>
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">Over-rounded chrome</span></div>
+        <div class="body">
+          <p><b>Bad:</b> 24px rounded-corner cards, 999px-radius CTA bars, soft-pill everything.</p>
+          <p><b>Good:</b> 4px buttons, 8px cards, 12px largest container. Editorial luxury aesthetics use minimal rounding. Pill tags are the only fully rounded element, used sparingly.</p>
+        </div>
+      </div>
+      <div class="anti">
+        <div class="head"><span class="glyph">∅</span><span class="l">Stock-photo agents in suits</span></div>
+        <div class="body">
+          <p><b>Bad:</b> Generic agent-with-clipboard standing in front of a stock home. Hand-shake imagery. Whiteboard-strategy-session.</p>
+          <p><b>Good:</b> Real listing photography. Or typography-as-image. Both work; both look unmistakably like our brand.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== 09 · APPLIED ============================== -->
+<div id="applied" style="padding: 96px 0 0;">
+  <div class="container">
+    <div class="section-head" style="margin-bottom: 32px;">
+      <span class="section-num">09 / Applied example</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>The system in motion</div>
+      <h2 style="margin-top: 16px;">A landing page in this system. <em>Hero, FAQ, footer.</em></h2>
+      <p class="lede" style="margin-top: 16px;">The system applied end-to-end on a single warm-traffic surface. Paper-white hero, paper-off FAQ, ink-900 closer. Every token, type ramp, and component above shown in composition.</p>
+    </div>
+  </div>
+
+  <!-- Applied Hero -->
+  <div class="applied-frame">
+    <section class="applied-hero">
+      <div class="container">
+        <div class="meta-bar">
+          <div style="display: flex; gap: 32px;">
+            <span class="mono-xs">For listing agents</span>
+            <span class="mono-xs">SYL · v2.0</span>
+          </div>
+          <span class="mono-xs">scaleyourlistings.getcybersphere.com</span>
+        </div>
+        <h1>
+          <em>Scale</em> your listings.<br/>
+          <span class="second">Pay only when they close.</span>
+        </h1>
+        <p class="lede">
+          25+ FSBOs, expireds, and probates booked in 90 days. Sub-10-second contact on every inquiry. Listing appointments routed to your calendar with motivated sellers — pre-qualified, in-MSA, ready to sign.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#">Book the strategy call <span class="arrow">→</span></a>
+          <span class="smallprint">25 minutes. No pitch. Live AI demo on the call.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Applied FAQ -->
+    <section class="applied-faq">
+      <div class="container">
+        <header class="section-head">
+          <span class="section-num">FAQ</span>
+          <div class="eyebrow"><span class="eyebrow-rule"></span>What top producers ask</div>
+          <h2 style="margin-top: 16px;">Six questions. <em>Plain answers.</em></h2>
+        </header>
+        <div class="faq" id="faq">
+          <div class="faq-row open">
+            <span class="num">01</span>
+            <div>
+              <div class="q">How is "pay only when listings close" actually structured?</div>
+              <p class="a">A success-fee on closed listings sourced through the AI. No retainer, no setup fee, no recurring SaaS line. The fee is a flat percentage of the listing-side commission, deducted only on the closings that came from inquiries the AI booked.</p>
+            </div>
+            <span class="icon">−</span>
+          </div>
+          <div class="faq-row">
+            <span class="num">02</span>
+            <div><div class="q">What does "sub-10-second contact" mean in practice?</div></div>
+            <span class="icon">+</span>
+          </div>
+          <div class="faq-row">
+            <span class="num">03</span>
+            <div><div class="q">Will the AI sound like a real person on the phone?</div></div>
+            <span class="icon">+</span>
+          </div>
+          <div class="faq-row">
+            <span class="num">04</span>
+            <div><div class="q">How does this fit alongside FollowUpBoss / Sierra / kvCORE?</div></div>
+            <span class="icon">+</span>
+          </div>
+          <div class="faq-row">
+            <span class="num">05</span>
+            <div><div class="q">What happens to the AI-booked appointments that don't close?</div></div>
+            <span class="icon">+</span>
+          </div>
+          <div class="faq-row">
+            <span class="num">06</span>
+            <div><div class="q">How long until we see the first listing close?</div></div>
+            <span class="icon">+</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Applied Footer / Final CTA -->
+    <footer class="applied-foot">
+      <div class="container">
+        <h2><em>Pay</em> only when listings close.</h2>
+        <p class="smallprint">25 minutes. No pitch. Live AI demo on the call, mapped to your current listing pipeline. If we're not a fit, we'll point you to what you should be doing instead.</p>
+        <div class="cta-row">
+          <a class="btn btn-light" href="#">Book the strategy call <span class="arrow">→</span></a>
+          <a class="btn" style="color: var(--paper-white); border: 1px solid rgba(255,255,255,0.4);" href="#">Talk to engineering</a>
+        </div>
+
+        <div class="foot-grid">
+          <div>
+            <div class="foot-brand"><em>Scale</em> Your Listings</div>
+            <p class="foot-brand-sub">An AI listing engine for top producers. Built by Cybersphere LLC. Stanford · Harvard · MIT engineering.</p>
+          </div>
+          <div>
+            <h4>Product</h4>
+            <a href="#">How it works</a>
+            <a href="#">Live demo</a>
+            <a href="#">Pricing model</a>
+            <a href="#">Roadmap</a>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <a href="#">Engineering team</a>
+            <a href="#">Press</a>
+            <a href="#">Contact</a>
+            <a href="#">Careers</a>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">TCPA</a>
+            <a href="#">Fair Housing</a>
+          </div>
+        </div>
+
+        <p class="compliance">
+          © 2026 Cybersphere LLC, DBA Scale Your Listings. Equal Housing Opportunity. Scale Your Listings is a marketing-services platform for licensed real estate professionals; we do not represent buyers or sellers and do not list property. All listings shown are the property of the broker or agent who holds the listing agreement. This site is not affiliated with or endorsed by Compass, Inc., HouseCanary, Zillow Group, or the National Association of REALTORS®.
+        </p>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ============================== 10 · PARENT & FAMILY ============================== -->
+<section class="section white" id="parent">
+  <div class="container">
+    <header class="section-head">
+      <span class="section-num">10 / Parent &amp; family</span>
+      <div class="eyebrow"><span class="eyebrow-rule"></span>Cybersphere LLC · three editorial DBAs</div>
+      <h2 style="margin-top: 16px;">Same engineering team. <em>Three editorial worlds.</em></h2>
+      <p class="lede" style="margin-top: 16px;">Scale Your Listings is one of three Cybersphere DBAs, alongside 7 Figure Smiles (cosmetic dental) and Sign More Cases (PI law). All three are now editorial in register but distinctively positioned within editorial. The brand family rhymes; each DBA's specific identity stays intact.</p>
+    </header>
+
+    <div class="family-grid">
+      <div class="family fs">
+        <div class="preview">
+          <span class="pre-eyebrow">Cosmetic dental</span>
+          <h3><em>7</em> Figure Smiles</h3>
+        </div>
+        <div class="meta">
+          <b>Warm editorial · forest green &amp; cream</b>
+          <span>Cream paper, forest-green accents, classic wordmark italic on the numeral. Specialty: cosmetic dental practice growth.</span>
+        </div>
+      </div>
+      <div class="family smc">
+        <div class="preview">
+          <span class="pre-eyebrow">PI law</span>
+          <h3>Sign More Cases</h3>
+        </div>
+        <div class="meta">
+          <b>Institutional editorial · cream &amp; ink</b>
+          <span>Cream paper, ink-on-cream display, Instrument Serif headline italic. Specialty: personal-injury intake conversion.</span>
+        </div>
+      </div>
+      <div class="family syl">
+        <div class="preview">
+          <span class="pre-eyebrow">Real estate</span>
+          <h3><em>Scale</em> Your Listings</h3>
+        </div>
+        <div class="meta">
+          <b>Minimalist-luxury editorial · paper, ink &amp; navy</b>
+          <span>Paper-white surfaces, Fraunces serif display, single navy accent. Specialty: AI-routed listing acquisition.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rules" style="margin-top: 56px;">
+      <div class="rule">
+        <span class="badge do">Shared</span>
+        <p class="text">Engineer-not-realtor voice. Banned-words list. Sentence-case CTAs. Editorial column widths. Compliance discipline. The voice is consistent across all three DBAs.</p>
+      </div>
+      <div class="rule">
+        <span class="badge do">SYL-only</span>
+        <p class="text"><b>Tighter color discipline</b> — only navy as accent. <b>Fraunces serif</b> for display (vs. Instrument Serif at SMC). <b>Photography-dominant</b> imagery direction. The minimalist-luxury slot in the family.</p>
+      </div>
+      <div class="rule">
+        <span class="badge no">Never</span>
+        <p class="text">Borrow 7FS forest green or SMC cream-warm into the SYL surface. Each DBA owns its accent. Cross-pollination breaks the family read.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== COLOPHON ============================== -->
+<div class="colophon">
+  <div class="container">
+    <div class="colophon-inner">
+      <div>Scale Your Listings — Design System v2.0 · Compass-inspired editorial register.</div>
+      <div class="stamp">SYL-DS-002 · 04.26.2026</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-row').forEach((row) => {
+    row.addEventListener('click', () => {
+      const isOpen = row.classList.contains('open');
+      document.querySelectorAll('.faq-row').forEach((r) => {
+        r.classList.remove('open');
+        const icon = r.querySelector('.icon');
+        if (icon) icon.textContent = '+';
+      });
+      if (!isOpen) {
+        row.classList.add('open');
+        const icon = row.querySelector('.icon');
+        if (icon) icon.textContent = '−';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
