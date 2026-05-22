@@ -1007,7 +1007,7 @@
     </div>
     <p class="calendar-fallback" style="font-size: 15px">If it's not a fit, we'll point you to what you should be doing instead.</p>
     <div class="calendar-slot">
-      <iframe src="https://api.leadconnectorhq.com/widget/booking/KBYqY4btarB150CTzb6M" style="width: 100%;border:none;overflow: hidden;" scrolling="no" id="X6YuZylGMI44SI3ZsEge_main"></iframe>
+      <iframe id="smc-booking-iframe" src="https://api.leadconnectorhq.com/widget/booking/KBYqY4btarB150CTzb6M" style="width: 100%;border:none;overflow: hidden;" scrolling="no"></iframe>
     </div>
   </section>
 
@@ -1266,6 +1266,62 @@
   const cur = {...TWEAK_DEFAULTS};
   document.getElementById('tw-accent').addEventListener('change', e => { cur.accentHue = e.target.value; applyTweaks(cur); window.parent.postMessage({type:'__edit_mode_set_keys', edits:{accentHue:cur.accentHue}}, '*'); });
   document.getElementById('tw-warmth').addEventListener('input', e => { cur.warmth = +e.target.value; applyTweaks(cur); window.parent.postMessage({type:'__edit_mode_set_keys', edits:{warmth:cur.warmth}}, '*'); });
+</script>
+<script>
+  /**
+   * SYL UTM forwarding (inner layer)
+   * Reads ad attribution params from this page's URL (forwarded by the GHL funnel wrapper)
+   * and rewrites the GHL booking iframe's src to include them so the form's hidden fields
+   * can capture them via Query Key matching.
+   * Also stashes them in sessionStorage so the confirmed page can read them if needed.
+   */
+  (function() {
+    var parentParams = new URLSearchParams(window.location.search);
+
+    // Whitelist of params we forward to the booking widget.
+    var forwardKeys = [
+      'utm_source',
+      'utm_medium',
+      'utm_campaign',
+      'utm_content',
+      'utm_term',
+      'utm_id',
+      'utm_platform',
+      'adset_name',
+      'adset_id',
+      'ad_id',
+      'campaign_id',
+      'placement',
+      'fbclid',
+      'gclid'
+    ];
+
+    var forwarded = new URLSearchParams();
+    forwardKeys.forEach(function(key) {
+      var val = parentParams.get(key);
+      if (val) forwarded.set(key, val);
+    });
+
+    // Rewrite the iframe src to include the forwarded params.
+    var iframe = document.getElementById('smc-booking-iframe');
+    if (iframe && forwarded.toString()) {
+      // Preserve the iframe's existing src as the base (in case the calendar ID ever changes)
+      var baseSrc = iframe.getAttribute('src').split('?')[0];
+      iframe.src = baseSrc + '?' + forwarded.toString();
+    }
+
+    // Backup: stash in sessionStorage
+    if (window.sessionStorage) {
+      try {
+        forwardKeys.forEach(function(key) {
+          var val = parentParams.get(key);
+          if (val) sessionStorage.setItem('smc_' + key, val);
+        });
+      } catch (e) {
+        // sessionStorage can throw in private mode on some browsers; ignore.
+      }
+    }
+  })();
 </script>
 </body>
 </html>
